@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shelby's Kilimanjaro Adventure</title>
+<title>Kilimanjaro summit adventure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -248,7 +248,7 @@
   .days {
     width: 100%;
     border-collapse: collapse;
-    min-width: 980px;
+    min-width: 1080px;
     font-size: 0.95rem;
   }
 
@@ -278,7 +278,7 @@
 
   .days td.num { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-  .days .day-label { font-weight: 600; white-space: nowrap; }
+  .days .day-label { font-weight: 600; white-space: nowrap; width: 2.5rem; text-align: center; }
 
   .days input[type="text"] {
     font: inherit;
@@ -309,6 +309,7 @@
   .tabs {
     display: flex;
     gap: 0.5rem;
+    overflow-x: auto;
     border-bottom: 1px solid var(--line);
     margin-bottom: 2.5rem;
   }
@@ -573,6 +574,27 @@
 
   .days.weather-table { min-width: 560px; }
 
+  .trail-btn {
+    font: inherit;
+    font-size: 0.82rem;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0.15rem 0;
+  }
+
+  .trail-btn:hover { background: var(--surface-2); }
+
+  .trail-link {
+    color: var(--glacier);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    white-space: nowrap;
+  }
+
   .rain-mod { background: #bfdbfe; color: #0b1622; }
   .rain-high { background: #60a5fa; color: #0b1622; }
   .rain-ext { background: #1d4ed8; color: #fff; font-weight: 600; }
@@ -606,6 +628,53 @@
     font-size: 0.97rem;
     margin: 0 0 1rem;
     line-height: 1.5;
+  }
+
+  .intro-note {
+    margin-top: 1.25rem;
+    padding: 1rem 1.1rem;
+    border-left: 3px solid var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    color: #d5e0ea;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .intro-note p { margin: 0 0 0.6rem; }
+  .intro-note p:last-child { margin-bottom: 0; }
+
+  .intro-note strong { color: #fff; font-weight: 600; }
+
+  .link-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .link-list li {
+    padding: 0.9rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+
+  .link-list a {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--glacier);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .link-list span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-top: 0.25rem;
   }
 
   .todo-add {
@@ -696,8 +765,13 @@
 
 <header>
   <div class="wrap">
-    <h1>Shelby's Kilimanjaro<br>Adventure</h1>
-    <p class="subtitle">Tick off each item as you pack. Your progress is saved in this browser.</p>
+    <h1>Kilimanjaro summit adventure</h1>
+    <p class="subtitle">Made for Shelby &amp; Kerrissa. Your packing list, itinerary, daily gear, weather, and to-dos for the trip.</p>
+    <div class="intro-note">
+      <p><strong>Your progress saves automatically</strong> in this browser, so it's still there when you come back.</p>
+      <p><strong>To move it to another device or keep a backup:</strong> tap <em>Save progress to file</em> to download a file. On the other device, open this page and tap <em>Load progress from file</em>, then choose that file. Keep the file somewhere safe, such as Google Drive or your Downloads folder.</p>
+      <p><strong>Tip:</strong> the <em>See progress JSON</em> button shows the same data as text, which you can copy and paste into a note.</p>
+    </div>
 
     <div class="progress">
       <div class="progress-meta">
@@ -724,6 +798,7 @@
     <button class="tab" role="tab" type="button" id="tab-daily" aria-controls="panel-daily" aria-selected="false" data-tab="daily" tabindex="-1">Daily gear</button>
     <button class="tab" role="tab" type="button" id="tab-todo" aria-controls="panel-todo" aria-selected="false" data-tab="todo" tabindex="-1">To do</button>
     <button class="tab" role="tab" type="button" id="tab-weather" aria-controls="panel-weather" aria-selected="false" data-tab="weather" tabindex="-1">Weather</button>
+    <button class="tab" role="tab" type="button" id="tab-links" aria-controls="panel-links" aria-selected="false" data-tab="links" tabindex="-1">Links</button>
   </nav>
 
   <section class="part" id="panel-itinerary" role="tabpanel" aria-labelledby="tab-itinerary" data-panel="itinerary">
@@ -743,6 +818,7 @@
             <th scope="col">High (°F)</th>
             <th scope="col">Low (°F)</th>
             <th scope="col">Rain (chance, amount)</th>
+            <th scope="col">Trail</th>
           </tr>
         </thead>
         <tbody id="days-body"></tbody>
@@ -841,6 +917,20 @@
   </section>
   </div>
 
+  <div id="panel-links" role="tabpanel" aria-labelledby="tab-links" data-panel="links" hidden>
+  <section class="part">
+    <h2 class="part-title">Links</h2>
+    <hr class="part-divider">
+    <p class="part-note">Useful documents for the trip.</p>
+    <ul class="link-list">
+      <li>
+        <a href="kilimanjaro-packing-list.pdf" target="_blank" rel="noopener">Altezza packing list (PDF)</a>
+        <span>The full Altezza Travel brochure, with packing lists, the climate guide, and the rental shop.</span>
+      </li>
+    </ul>
+  </section>
+  </div>
+
   <section class="part json-panel" id="json-panel" hidden>
     <h2 class="part-title">Progress JSON</h2>
     <hr class="part-divider">
@@ -855,7 +945,7 @@
   </section>
 </main>
 
-<footer>Altezza Travel · Karibu Tanzania!</footer>
+<footer>Made with ❤️ by BT</footer>
 
 <script>
   const ESSENTIALS = [
@@ -1111,6 +1201,17 @@
   const PEAK_M = [3010, 3845, 4630, 4035, 4673, 5895, 3950];
   const forecasts = [];
 
+  // Trail links supplied by the user. null means no link yet.
+  const TRAIL_LINKS = [
+    "https://www.alltrails.com/explore/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-machame-gate-machame-camp",
+    "https://www.alltrails.com/explore/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-machame-camp-shira-2-camp",
+    "https://www.alltrails.com/explore/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-shira-2-camp-lava-tower-barranco-camp",
+    "https://www.alltrails.com/explore/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-barranco-camp-karanga-camp",
+    "https://www.alltrails.com/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-karanga-camp-barafu-camp",
+    "https://www.alltrails.com/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-barafu-camp-uhuru-peak-mweka-camp",
+    "https://www.alltrails.com/trail/tanzania/kilimanjaro/mount-kilimanjaro-machame-route-mweka-camp-mweka-gate"
+  ];
+
   function trekDate(i) {
     const d = new Date(TREK_START + "T00:00:00");
     d.setDate(d.getDate() + i);
@@ -1175,7 +1276,7 @@
       };
 
       const temps = tempFor(i);
-      addCell(d.day + " · " + dateLabel(i), "day-label");
+      addCell(d.day.replace("Day ", ""), "day-label");
       addCell(d.zone);
       addCell(d.start);
       addCell(d.end);
@@ -1184,6 +1285,21 @@
       addCell(temps.high, "num");
       addCell(temps.low, "num");
       addCell(rainFor(i), "num");
+
+      const trailCell = document.createElement("td");
+      const link = TRAIL_LINKS[i];
+      if (link) {
+        const a = document.createElement("a");
+        a.href = link;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = "AllTrails";
+        a.className = "trail-link";
+        trailCell.appendChild(a);
+      } else {
+        trailCell.textContent = "—";
+      }
+      tr.appendChild(trailCell);
       tbody.appendChild(tr);
     });
   }
