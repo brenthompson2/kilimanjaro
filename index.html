@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shelby's Kilimanjaro Adventure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --header: #0b1622;
+    --snow: #111d2a;
+    --surface: #17273a;
+    --surface-2: #1f3349;
+    --navy: #e6edf3;
+    --ink: #e6edf3;
+    --muted: #9badbc;
+    --line: #2e4358;
+    --glacier: #7fb3de;
+    --accent: #f2b705;
+    --on-accent: #0b1622;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background: var(--snow);
+    line-height: 1.5;
+  }
+
+  header {
+    background: var(--header);
+    color: #fff;
+    padding: 2.5rem 1.25rem 2rem;
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: clamp(2rem, 6vw, 3.25rem);
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #b9cad8;
+    font-size: 1.05rem;
+  }
+
+  .progress {
+    margin-top: 1.75rem;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-count {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.25s ease;
+  }
+
+  .reset {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .reset:hover { border-color: #fff; }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .part {
+    margin-bottom: 3rem;
+  }
+
+  .part-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+
+  .part-note {
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .part-divider {
+    border: 0;
+    border-top: 3px solid var(--accent);
+    width: 64px;
+    margin: 0 0 1rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem 3rem;
+  }
+
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .group h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--glacier);
+    margin: 0 0 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.25rem;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .item:hover { background: rgba(127, 179, 222, 0.12); }
+
+  .item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    border: 2px solid var(--navy);
+    border-radius: 4px;
+    background: var(--surface);
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .item input[type="checkbox"]::after {
+    content: "";
+    width: 11px;
+    height: 6px;
+    border-left: 3px solid var(--on-accent);
+    border-bottom: 3px solid var(--on-accent);
+    transform: rotate(-45deg) scale(0);
+    transition: transform 0.15s ease;
+    margin-top: -2px;
+  }
+
+  .item input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .item input[type="checkbox"]:checked::after {
+    transform: rotate(-45deg) scale(1);
+  }
+
+  .item input[type="checkbox"]:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: 2px;
+  }
+
+  .item span {
+    font-size: 1.02rem;
+  }
+
+  .item input:checked ~ span {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .optional {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+  }
+
+  .optional .part-divider { border-top-color: var(--glacier); }
+
+  .weight-note {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    padding: 0.9rem 1.1rem;
+    margin: 0 0 2rem;
+    font-size: 0.97rem;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+  }
+
+  .days {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+    font-size: 0.95rem;
+  }
+
+  .days th,
+  .days td {
+    text-align: left;
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+  }
+
+  .days th {
+    font-weight: 600;
+    color: var(--glacier);
+    background: var(--surface-2);
+    vertical-align: bottom;
+  }
+
+  .days tr:last-child td { border-bottom: 0; }
+
+  .days td.elev {
+    white-space: pre-line;
+    min-width: 120px;
+    max-width: 170px;
+    line-height: 1.35;
+  }
+
+  .days td.num { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .days .day-label { font-weight: 600; white-space: nowrap; }
+
+  .days input[type="text"] {
+    font: inherit;
+    width: 100%;
+    min-width: 90px;
+    border: 0;
+    border-bottom: 1px dashed var(--line);
+    background: transparent;
+    padding: 0.2rem 0;
+    color: var(--ink);
+  }
+
+  .days input[type="text"]:focus {
+    outline: none;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .days input[type="text"]::placeholder { color: #a3b1bd; }
+
+  .table-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 1rem 0 0;
+  }
+
+  [hidden] { display: none !important; }
+
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 2.5rem;
+  }
+
+  .tab {
+    font: inherit;
+    font-size: 1.05rem;
+    font-weight: 500;
+    background: none;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    padding: 0.75rem 1.1rem;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .tab:hover { color: var(--ink); }
+
+  .tab[aria-selected="true"] {
+    color: var(--navy);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .tab:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: -3px;
+  }
+
+  .day-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .day-btn {
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .day-btn[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .day-btn:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: 2px;
+  }
+
+  .day-summary {
+    font-weight: 500;
+    margin: 0 0 1.25rem;
+  }
+
+  .gear-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 700px) {
+    .gear-cols { grid-template-columns: 1fr 1fr; }
+  }
+
+  .gear-col {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1rem;
+  }
+
+  .col-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .col-head h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .col-head span {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .drop-zone {
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border: 2px dashed transparent;
+    border-radius: 6px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .drop-zone.over {
+    border-color: var(--accent);
+    background: rgba(242, 183, 5, 0.14);
+  }
+
+  .gear-item {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface-2);
+    cursor: grab;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+
+  .gear-item:hover { border-color: var(--glacier); }
+
+  .gear-item.dragging { opacity: 0.4; }
+
+  .gear-item.changed {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+    font-weight: 600;
+  }
+
+  .gear-item:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: 1px;
+  }
+
+  .btn-ghost {
+    font: inherit;
+    font-size: 0.9rem;
+    background: none;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1.25rem;
+  }
+
+  .btn-ghost:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .sleep-kit {
+    margin-top: 1rem;
+    border-top: 1px solid var(--line);
+    padding-top: 0.75rem;
+  }
+
+  .sleep-kit summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--navy);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    list-style-position: inside;
+  }
+
+  .sleep-kit summary span {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sleep-kit summary:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: 2px;
+  }
+
+  .sleep-list {
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .sleep-list li {
+    padding: 0.45rem 0.7rem;
+    border: 1px dashed var(--line);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+
+  .item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .item.disabled:hover { background: none; }
+
+  .item.disabled input[type="checkbox"] {
+    cursor: not-allowed;
+    border-color: var(--muted);
+  }
+
+  .item.disabled span::after {
+    content: " · not bringing";
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .file-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .json-panel { scroll-margin-top: 1rem; }
+
+  .json-text {
+    display: block;
+    width: 100%;
+    min-height: 260px;
+    padding: 0.75rem;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    resize: vertical;
+  }
+
+  .json-text:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: 1px;
+  }
+
+  .json-panel .file-actions { margin-top: 1rem; }
+
+  .copy-status {
+    color: var(--muted);
+    font-size: 0.95rem;
+    min-height: 1.4em;
+    margin: 0.75rem 0 0;
+  }
+
+  .days.weather-table { min-width: 560px; }
+
+  .rain-mod { background: #bfdbfe; color: #0b1622; }
+  .rain-high { background: #60a5fa; color: #0b1622; }
+  .rain-ext { background: #1d4ed8; color: #fff; font-weight: 600; }
+
+  .source-note,
+  .wind-legend {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 1rem;
+  }
+
+  .source-note a {
+    color: var(--glacier);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .wind-legend span {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    margin-right: 0.35rem;
+    font-size: 0.85rem;
+  }
+
+  .wind-mod { background: #fde68a; color: #0b1622; }
+  .wind-high { background: #f6a04d; color: #0b1622; }
+  .wind-ext { background: #dc2626; color: #fff; font-weight: 600; }
+
+  .weather-summary {
+    font-size: 0.97rem;
+    margin: 0 0 1rem;
+    line-height: 1.5;
+  }
+
+  .todo-add {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .todo-add input[type="text"] {
+    flex: 1;
+    font: inherit;
+    font-size: 1rem;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .todo-add input[type="text"]:focus {
+    outline: 3px solid var(--glacier);
+    outline-offset: 1px;
+  }
+
+  .todo-add .btn-ghost {
+    margin-top: 0;
+  }
+
+  .todo-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .todo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.2rem 0.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .todo-row .item {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .todo-remove {
+    font: inherit;
+    font-size: 0.85rem;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .todo-remove:hover {
+    color: var(--ink);
+    background: rgba(230, 237, 243, 0.08);
+  }
+
+  .todo-remove:focus-visible {
+    outline: 3px solid var(--glacier);
+    outline-offset: 1px;
+  }
+
+  .todo-empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    padding: 0 1rem 2.5rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Shelby's Kilimanjaro<br>Adventure</h1>
+    <p class="subtitle">Tick off each item as you pack. Your progress is saved in this browser.</p>
+
+    <div class="progress">
+      <div class="progress-meta">
+        <span class="progress-count" id="count">0 / 0</span>
+        <button class="reset" id="reset" type="button">Reset all</button>
+      </div>
+      <div class="progress-bar" aria-hidden="true">
+        <div class="progress-fill" id="fill"></div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap file-actions">
+    <button class="reset" id="save-progress" type="button">Save progress to file</button>
+    <button class="reset" id="load-progress" type="button">Load progress from file</button>
+    <button class="reset" id="see-json" type="button">See progress JSON</button>
+    <input type="file" id="load-file" accept=".json,application/json" hidden>
+  </div>
+</header>
+
+<main>
+  <nav class="tabs" role="tablist" aria-label="Checklist sections">
+    <button class="tab" role="tab" type="button" id="tab-itinerary" aria-controls="panel-itinerary" aria-selected="true" data-tab="itinerary">Itinerary</button>
+    <button class="tab" role="tab" type="button" id="tab-gear" aria-controls="panel-gear" aria-selected="false" data-tab="gear" tabindex="-1">Gear</button>
+    <button class="tab" role="tab" type="button" id="tab-daily" aria-controls="panel-daily" aria-selected="false" data-tab="daily" tabindex="-1">Daily gear</button>
+    <button class="tab" role="tab" type="button" id="tab-todo" aria-controls="panel-todo" aria-selected="false" data-tab="todo" tabindex="-1">To do</button>
+    <button class="tab" role="tab" type="button" id="tab-weather" aria-controls="panel-weather" aria-selected="false" data-tab="weather" tabindex="-1">Weather</button>
+  </nav>
+
+  <section class="part" id="panel-itinerary" role="tabpanel" aria-labelledby="tab-itinerary" data-panel="itinerary">
+    <h2 class="part-title">Day by day</h2>
+    <hr class="part-divider">
+    <p class="part-note">Altezza's 7-day Machame route. Temperatures are from the brochure. Fill in miles once you have your trail distances.</p>
+    <div class="table-wrap">
+      <table class="days">
+        <thead>
+          <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Zone</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col">Miles</th>
+            <th scope="col">Elevation (ft)</th>
+            <th scope="col">High (°F)</th>
+            <th scope="col">Low (°F)</th>
+            <th scope="col">Rain (chance, amount)</th>
+          </tr>
+        </thead>
+        <tbody id="days-body"></tbody>
+      </table>
+    </div>
+    <p class="table-note" id="forecast-status"></p>
+    <p class="table-note">Miles are from Ultimate Kilimanjaro's 7-day Machame itinerary. Temperatures for Days 2–5 and 7 are ranges across the zones you cross that day. Some camp elevations are typical figures rather than brochure values, so check them with your Altezza team.</p>
+  </section>
+
+  <div id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" data-panel="gear" hidden>
+  <section class="part" id="essentials">
+    <h2 class="part-title">Essential items</h2>
+    <hr class="part-divider">
+    <p class="part-note">Pack these for every trip. Hardshell gear and a rain poncho are needed even in the dry season.</p>
+    <div class="grid" id="essential-groups"></div>
+  </section>
+
+  <section class="part optional" id="optional">
+    <h2 class="part-title">Optional extras</h2>
+    <hr class="part-divider">
+    <p class="weight-note">Your duffle bag must not exceed 15 kg. An extra porter can be hired for a fee, raising the limit to 30 kg.</p>
+    <div class="grid" id="optional-groups"></div>
+  </section>
+  </div>
+
+  <div id="panel-daily" role="tabpanel" aria-labelledby="tab-daily" data-panel="daily" hidden>
+  <section class="part">
+    <h2 class="part-title">Daily gear</h2>
+    <hr class="part-divider">
+    <p class="part-note">Items ticked on the Gear tab appear for each day. Drag items between the day pack and the duffle, or tap an item to move it. From day 2, yellow items have moved since the day before. Clothing you wear all day starts in the duffle, so move it to the day pack if you carry it.</p>
+    <div class="day-picker" id="day-picker"></div>
+    <p class="day-summary" id="day-summary"></p>
+    <div class="gear-cols">
+      <div class="gear-col">
+        <div class="col-head"><h3>Day pack</h3><span id="pack-count"></span></div>
+        <div class="drop-zone" data-zone="pack" id="zone-pack"></div>
+        <details class="sleep-kit" id="day-kit" open>
+          <summary>Day pack essentials <span id="day-kit-count"></span></summary>
+          <ul class="sleep-list" id="day-kit-list"></ul>
+        </details>
+      </div>
+      <div class="gear-col">
+        <div class="col-head"><h3>Duffle</h3><span id="duffle-count"></span></div>
+        <div class="drop-zone" data-zone="duffle" id="zone-duffle"></div>
+        <details class="sleep-kit" id="sleep-kit" open>
+          <summary>Sleep kit <span id="sleep-count"></span></summary>
+          <ul class="sleep-list" id="sleep-list"></ul>
+        </details>
+      </div>
+    </div>
+    <button class="btn-ghost" id="reset-day" type="button">Reset this day to defaults</button>
+  </section>
+  </div>
+
+  <div id="panel-todo" role="tabpanel" aria-labelledby="tab-todo" data-panel="todo" hidden>
+  <section class="part">
+    <h2 class="part-title">To do</h2>
+    <hr class="part-divider">
+    <p class="part-note">Jot down anything to sort out before you fly. Tasks are saved in this browser.</p>
+    <div class="todo-add" id="todo-form">
+      <input type="text" id="todo-input" placeholder="Add a task" aria-label="New task" autocomplete="off">
+      <button class="btn-ghost" id="todo-add-btn" type="button">Add</button>
+    </div>
+    <ul class="todo-list" id="todo-list"></ul>
+    <p class="todo-empty" id="todo-empty">No tasks yet.</p>
+    <button class="btn-ghost" id="todo-clear" type="button">Clear completed</button>
+  </section>
+  </div>
+
+  <div id="panel-weather" role="tabpanel" aria-labelledby="tab-weather" data-panel="weather" hidden>
+  <section class="part">
+    <h2 class="part-title">Hourly weather</h2>
+    <hr class="part-divider">
+    <p class="source-note">Data from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>, calculated for each day's highest point. For more detail, see Meteonews's <a href="https://meteonews.fr/en/Course_of_the_Day/G157452/Mount_Kilimanjaro/d2/day_after_tomorrow" target="_blank" rel="noopener">3-hourly summit forecast</a>, Time and Date's <a href="https://www.timeanddate.com/weather/@157452/ext" target="_blank" rel="noopener">2-week forecast</a>, or Snow-Forecast's <a href="https://snow-forecast.com/resorts/Kilimanjaro/6day/top" target="_blank" rel="noopener">Kilimanjaro 6-day report</a>.</p>
+    <p class="wind-legend">Rain key: <span class="rain-mod">30–59% or 0.10–0.19 in/h moderate</span><span class="rain-high">60–79% or 0.20–0.29 in/h high</span><span class="rain-ext">80%+ or 0.30+ in/h extreme</span></p>
+    <p class="wind-legend">Wind key: <span class="wind-mod">15–24 mph moderate</span><span class="wind-high">25–38 mph high</span><span class="wind-ext">39+ mph extreme</span></p>
+    <p class="part-note">Hour-by-hour forecast at each day's highest point. Rain and wind cells are colour-coded by strength, using the keys above.</p>
+    <div class="day-picker" id="weather-day-picker"></div>
+    <p class="weather-summary" id="weather-summary"></p>
+    <div class="table-wrap">
+      <table class="days weather-table">
+        <thead>
+          <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Temp (°F)</th>
+            <th scope="col">Rain chance</th>
+            <th scope="col">Rain (in)</th>
+            <th scope="col">Wind (mph)</th>
+            <th scope="col">Gusts (mph)</th>
+          </tr>
+        </thead>
+        <tbody id="weather-body"></tbody>
+      </table>
+    </div>
+    <p class="table-note" id="weather-status"></p>
+  </section>
+  </div>
+
+  <section class="part json-panel" id="json-panel" hidden>
+    <h2 class="part-title">Progress JSON</h2>
+    <hr class="part-divider">
+    <p class="part-note">Everything the checklist has saved. Copy it and keep it somewhere safe as a backup.</p>
+    <textarea class="json-text" id="json-text" readonly spellcheck="false" aria-label="Progress JSON"></textarea>
+    <div class="file-actions">
+      <button class="btn-ghost" id="copy-json" type="button">Copy to clipboard</button>
+      <button class="btn-ghost" id="refresh-json" type="button">Refresh</button>
+      <button class="btn-ghost" id="hide-json" type="button">Hide</button>
+    </div>
+    <p class="copy-status" id="copy-status" role="status"></p>
+  </section>
+</main>
+
+<footer>Altezza Travel · Karibu Tanzania!</footer>
+
+<script>
+  const ESSENTIALS = [
+    { title: "Footwear", items: [
+      "Leg gaiters",
+      "Hiking shoes",
+      "Trekking boots (with ankle support)",
+      "Hiking socks (for every day)",
+      "Warm summit socks",
+      "Microspikes"
+    ]},
+    { title: "Clothing", items: [
+      "Trekking pants",
+      "Thermal underwear, 2–3 sets",
+      "Trekking shirts, 5×",
+      "Fleece jacket, 2×",
+      "Hardshell jacket (water-resistant)",
+      "Hardshell pants (water-resistant)",
+      "Insulated summit jacket",
+      "Insulated summit pants",
+      "Waterproof poncho"
+    ]},
+    { title: "Sleeping", items: [
+      "Sleeping bag (comfort rating 10°F / −12°C)"
+    ]},
+    { title: "Hand gear", items: [
+      "Fleece gloves",
+      "Mittens"
+    ]},
+    { title: "Headgear", items: [
+      "Sunglasses (Category 3–4)",
+      "Sun hat or a cap",
+      "Headlamp",
+      "Fleece hat",
+      "Balaclava"
+    ]},
+    { title: "Bags", items: [
+      "Backpack (30–40 liters)",
+      "Duffle bag (100–150 liters)"
+    ]},
+    { title: "Other items", items: [
+      "Hydration bag (2–2.5 liters)",
+      "Water bottle (flask), 1 L",
+      "Powerbank",
+      "Trekking poles",
+      "Sunscreen SPF 30+"
+    ]}
+  ];
+
+  const OPTIONAL = [
+    { title: "For air travel to Tanzania", items: [
+      "Travel bag lock",
+      "Name tag on your travel bag",
+      "Travel luggage strap"
+    ]},
+    { title: "For better sleep", items: [
+      "Sleeping bag liner",
+      "Earplugs",
+      "Inflatable pillow",
+      "Fleece clothing set"
+    ]},
+    { title: "To maintain energy", items: [
+      "Snacks: protein bars, dried fruits",
+      "Thermos",
+      "Electrolytes for hydration"
+    ]},
+    { title: "To keep everything dry and organized", items: [
+      "Dry bags",
+      "Zip-lock bags"
+    ]},
+    { title: "Gadgets", items: [
+      "Power bank, e-book",
+      "Spare batteries for a headlamp"
+    ]},
+    { title: "For more comfort at the camp", items: [
+      "Light down jacket",
+      "Extra fleece jacket",
+      "Camp slippers (like Crocs)",
+      "Tabletop games"
+    ]},
+    { title: "For comfort on the trail", items: [
+      "Hand moisturizer",
+      "Athletic tape",
+      "Neck gaiter",
+      "Hand warmers"
+    ]},
+    { title: "Personal hygiene", items: [
+      "Deodorant",
+      "Personal hygiene items",
+      "Dry shampoo",
+      "Camp towel and disposable towels",
+      "Nail scissors, clippers, and a nail file",
+      "Wet wipes and paper napkins",
+      "Lip balm",
+      "Toothpaste and toothbrush"
+    ]}
+  ];
+
+  const STORAGE_KEY = "kilimanjaro-packing-v1";
+  // Essentials start ticked, except these.
+  const ESSENTIALS_START_UNTICKED = ["Hiking shoes", "Trekking poles"];
+  // Optional groups that start ticked.
+  const OPTIONAL_START_TICKED_GROUPS = ["For better sleep", "Personal hygiene"];
+  const OPTIONAL_START_UNTICKED = ["Nail scissors, clippers, and a nail file"];
+
+  // Items we're intentionally not bringing: shown greyed out and can't be ticked.
+  const DISABLED_ITEMS = [
+    "Nail scissors, clippers, and a nail file",
+    "Travel bag lock",
+    "Name tag on your travel bag",
+    "Travel luggage strap",
+    "Spare batteries for a headlamp",
+    "Hand moisturizer",
+    "Tabletop games"
+  ];
+
+  function startsTicked(prefix, groupTitle, label) {
+    if (DISABLED_ITEMS.includes(label)) return false;
+    if (prefix === "ess") return !ESSENTIALS_START_UNTICKED.includes(label);
+    return OPTIONAL_START_TICKED_GROUPS.includes(groupTitle) && !OPTIONAL_START_UNTICKED.includes(label);
+  }
+  const GEAR_KEY = "kilimanjaro-daily-gear-v1";
+  const allBoxes = [];
+
+  function slug(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  }
+
+  function loadState() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveState(state) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      /* storage unavailable: checklist still works for this session */
+    }
+  }
+
+  function render(groups, containerId, prefix) {
+    const container = document.getElementById(containerId);
+    groups.forEach(group => {
+      const wrap = document.createElement("div");
+      wrap.className = "group";
+
+      const h3 = document.createElement("h3");
+      h3.textContent = group.title;
+      wrap.appendChild(h3);
+
+      const ul = document.createElement("ul");
+      group.items.forEach(text => {
+        const id = prefix + "-" + slug(group.title) + "-" + slug(text);
+
+        const li = document.createElement("li");
+        const label = document.createElement("label");
+        label.className = "item";
+
+        const box = document.createElement("input");
+        box.type = "checkbox";
+        box.dataset.id = id;
+        if (DISABLED_ITEMS.includes(text)) {
+          box.disabled = true;
+          label.classList.add("disabled");
+        }
+        if (startsTicked(prefix, group.title, text)) box.dataset.defaultChecked = "true";
+
+        const span = document.createElement("span");
+        span.textContent = text;
+
+        label.appendChild(box);
+        label.appendChild(span);
+        li.appendChild(label);
+        ul.appendChild(li);
+        allBoxes.push(box);
+      });
+
+      wrap.appendChild(ul);
+      container.appendChild(wrap);
+    });
+  }
+
+  function updateProgress() {
+    const active = allBoxes.filter(b => !b.disabled);
+    const total = active.length;
+    const done = active.filter(b => b.checked).length;
+    document.getElementById("count").textContent = done + " / " + total + " packed";
+    document.getElementById("fill").style.width = (total ? (done / total) * 100 : 0) + "%";
+  }
+
+  render(ESSENTIALS, "essential-groups", "ess");
+  render(OPTIONAL, "optional-groups", "opt");
+
+  const state = loadState();
+  allBoxes.forEach(box => {
+    box.checked = !box.disabled && (box.dataset.id in state ? !!state[box.dataset.id] : box.dataset.defaultChecked === "true");
+    box.addEventListener("change", () => {
+      state[box.dataset.id] = box.checked;
+      saveState(state);
+      updateProgress();
+      renderGear();
+      renderSleepKit();
+    });
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    if (!confirm("Clear all ticked items?")) return;
+    allBoxes.forEach(box => {
+      box.checked = false;
+      state[box.dataset.id] = false;
+    });
+    saveState(state);
+    updateProgress();
+    renderGear();
+    renderSleepKit();
+  });
+
+  updateProgress();
+
+  // Day-by-day route. Elevation and temperatures are from the brochure;
+  // miles, start and end are left for the user to fill in.
+  // Altezza 7-day Machame route. Camp and gate elevations are from Altezza's
+  // route listings where available; the rest are typical values for the route.
+  // Miles are from Ultimate Kilimanjaro's 7-day Machame itinerary (62 km total).
+  const DAYS = [
+    { day: "Day 1", zone: "Rainforest", elev: "5,900 → 9,875 ft (+3,975 ft)", miles: "7 (11 km)", start: "Machame Gate", end: "Machame Camp", high: "68°F", low: "55°F" },
+    { day: "Day 2", zone: "Heath and Moorland", elev: "9,875 → 12,615 ft (+2,740 ft)", miles: "3 (5 km)", start: "Machame Camp", end: "Shira Camp", high: "45°F", low: "32°F" },
+    { day: "Day 3", zone: "Heath to Alpine Desert", elev: "12,615 → 15,190 → 12,990 ft (+2,575 / −2,200 ft)", miles: "6 (10 km)", start: "Shira Camp", end: "Barranco Camp (via Lava Tower)", high: "45 to 32°F", low: "32 to 19°F" },
+    { day: "Day 4", zone: "Alpine Desert", elev: "12,990 → 13,240 ft (+250 ft)", miles: "3 (5 km)", start: "Barranco Camp", end: "Karanga Camp", high: "32°F", low: "19°F" },
+    { day: "Day 5", zone: "Alpine Desert", elev: "13,240 → 15,330 ft (+2,090 ft)", miles: "2 (4 km)", start: "Karanga Camp", end: "Barafu Camp", high: "32°F", low: "19°F" },
+    { day: "Day 6", zone: "Arctic Summit", elev: "15,330 → 19,340 → 12,960 ft (+4,010 / −6,380 ft)", miles: "10 (17 km)", start: "Barafu Camp", end: "Millennium Camp (via Uhuru Peak)", high: "14°F", low: "1°F" },
+    { day: "Day 7", zone: "Rainforest and Cultivation", elev: "12,960 → 5,380 ft (−7,580 ft)", miles: "6 (10 km)", start: "Millennium Camp", end: "Mweka Gate", high: "68 to 86°F", low: "55 to 73°F" }
+  ];
+
+  const DAYS_KEY = "kilimanjaro-days-v1";
+
+  function loadDays() {
+    try {
+      return JSON.parse(localStorage.getItem(DAYS_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  // Trek dates and live forecast. Day 1 is the first hiking day.
+  const TREK_START = "2026-11-01";
+  const ROUTE_POINT = { lat: -3.0674, lon: 37.3556 }; // Kilimanjaro
+  // Highest point of each day in metres, so the forecast reflects altitude.
+  const PEAK_M = [3010, 3845, 4630, 4035, 4673, 5895, 3950];
+  const forecasts = [];
+
+  function trekDate(i) {
+    const d = new Date(TREK_START + "T00:00:00");
+    d.setDate(d.getDate() + i);
+    return d;
+  }
+
+  function dateLabel(i) {
+    return trekDate(i).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+
+  function isoDate(i) {
+    const d = trekDate(i);
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  // Forecast when we have it, otherwise the typical temperatures from the brochure.
+  function tempFor(i) {
+    const f = forecasts[i];
+    if (f) return { high: f.high + "°F", low: f.low + "°F" };
+    return { high: DAYS[i].high, low: DAYS[i].low };
+  }
+
+  // Rain as "chance, amount", or a dash when there is no forecast.
+  function rainFor(i) {
+    const f = forecasts[i];
+    if (!f || f.rainChance === null || f.rainIn === null) return "—";
+    return f.rainChance + "%, " + f.rainIn.toFixed(2) + " in";
+  }
+
+  async function fetchForecast(i) {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + ROUTE_POINT.lat +
+      "&longitude=" + ROUTE_POINT.lon +
+      "&elevation=" + PEAK_M[i] +
+      "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum" +
+      "&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=Africa%2FDar_es_Salaam" +
+      "&start_date=" + isoDate(i) + "&end_date=" + isoDate(i);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Forecast request failed");
+    const data = await response.json();
+    const chance = data.daily.precipitation_probability_max;
+    const amount = data.daily.precipitation_sum;
+    return {
+      high: Math.round(data.daily.temperature_2m_max[0]),
+      low: Math.round(data.daily.temperature_2m_min[0]),
+      rainChance: chance ? Math.round(chance[0]) : null,
+      rainIn: amount ? amount[0] : null
+    };
+  }
+
+  function renderDays() {
+    const tbody = document.getElementById("days-body");
+    tbody.innerHTML = "";
+
+    DAYS.forEach((d, i) => {
+      const tr = document.createElement("tr");
+
+      const addCell = (text, cls) => {
+        const td = document.createElement("td");
+        if (cls) td.className = cls;
+        td.textContent = text;
+        tr.appendChild(td);
+      };
+
+      const temps = tempFor(i);
+      addCell(d.day + " · " + dateLabel(i), "day-label");
+      addCell(d.zone);
+      addCell(d.start);
+      addCell(d.end);
+      addCell(d.miles, "num");
+      addCell(d.elev.replace(" (", "\n("), "elev");
+      addCell(temps.high, "num");
+      addCell(temps.low, "num");
+      addCell(rainFor(i), "num");
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function loadForecast() {
+    const status = document.getElementById("forecast-status");
+    status.textContent = "Loading the forecast…";
+    const results = await Promise.allSettled(DAYS.map((_, i) => fetchForecast(i)));
+    let loaded = 0;
+    results.forEach((r, i) => {
+      if (r.status === "fulfilled") {
+        forecasts[i] = r.value;
+        loaded++;
+      }
+    });
+    renderDays();
+    renderGear();
+    if (loaded === DAYS.length) {
+      status.textContent = "Live forecast for each day's highest point.";
+    } else if (loaded > 0) {
+      status.textContent = "Forecast loaded for " + loaded + " of " + DAYS.length + " days. The others show typical temperatures.";
+    } else {
+      status.textContent = "Couldn't load the forecast, so the table shows typical temperatures.";
+    }
+  }
+
+  renderDays();
+  loadForecast();
+
+  // Daily gear: every item for each day, split between the day pack and the duffle.
+  // Default day pack contents are matched by keyword so small label differences don't matter.
+  const GEAR = [];
+  // checkId matches the id of the item's checkbox on the Gear tab.
+  ESSENTIALS.forEach(g => g.items.forEach(t => { const cid = "ess-" + slug(g.title) + "-" + slug(t); GEAR.push({ id: cid, label: t, group: g.title, checkId: cid }); }));
+  OPTIONAL.forEach(g => g.items.forEach(t => { const cid = "opt-" + slug(g.title) + "-" + slug(t); GEAR.push({ id: cid, label: t, group: g.title, checkId: cid }); }));
+
+  const PACK_DEFAULTS = [
+    // Day 1: rainforest, 20°C high, damp trail, possible rain
+    ["Hydration bag", "Water bottle", "Sunscreen", "Sun hat", "Sunglasses", "poncho", "Trekking poles", "Snacks", "Powerbank", "Wet wipes", "Lip balm"],
+    // Day 2: heath and moorland, 7°C high, cold and windy
+    ["Hydration bag", "Water bottle", "Sunscreen", "Sunglasses", "Fleece jacket", "Hardshell jacket", "Fleece gloves", "Fleece hat", "Trekking poles", "Snacks", "Hand warmers", "Neck gaiter", "Lip balm", "Electrolytes"],
+    // Day 3: heath to alpine desert, Lava Tower, longest exposure
+    ["Hydration bag", "Water bottle", "Sunscreen", "Sunglasses", "Fleece jacket", "Hardshell jacket", "Fleece gloves", "Fleece hat", "Trekking poles", "Snacks", "Hand warmers", "Neck gaiter", "Lip balm", "Electrolytes", "Thermos"],
+    // Day 4: alpine desert, Barranco Wall
+    ["Hydration bag", "Water bottle", "Sunscreen", "Sunglasses", "Fleece jacket", "Hardshell jacket", "Fleece gloves", "Fleece hat", "Trekking poles", "Snacks", "Hand warmers", "Neck gaiter", "Lip balm", "Electrolytes", "Thermos"],
+    // Day 5: alpine desert, Barafu, summit prep
+    ["Hydration bag", "Water bottle", "Sunscreen", "Sunglasses", "Fleece jacket", "Hardshell jacket", "Fleece gloves", "Fleece hat", "Trekking poles", "Snacks", "Hand warmers", "Neck gaiter", "Lip balm", "Electrolytes", "Thermos", "Headlamp", "Mittens", "Insulated summit jacket"],
+    // Day 6: summit night and summit day, arctic, -10°C high
+    ["Hydration bag", "Water bottle", "Thermos", "Insulated summit jacket", "Mittens", "Fleece gloves", "Balaclava", "Fleece hat", "Headlamp", "Spare batteries", "Sunglasses", "Hand warmers", "Snacks", "Trekking poles", "Electrolytes", "Lip balm", "Sunscreen"],
+    // Day 7: descent through forest, warm
+    ["Hydration bag", "Water bottle", "Sunscreen", "Sun hat", "Sunglasses", "poncho", "Trekking poles", "Snacks", "Wet wipes", "Lip balm", "Powerbank"]
+  ];
+
+  let gearDay = 0;
+
+  function loadGear() {
+    try {
+      return JSON.parse(localStorage.getItem(GEAR_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveGearState(state) {
+    try {
+      localStorage.setItem(GEAR_KEY, JSON.stringify(state));
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function zoneFor(day, item, saved) {
+    const override = saved[day] && saved[day][item.id];
+    if (override) return override;
+    return PACK_DEFAULTS[day].some(k => item.label.includes(k)) ? "pack" : "duffle";
+  }
+
+  function setZone(id, zone) {
+    const saved = loadGear();
+    saved[gearDay] = saved[gearDay] || {};
+    saved[gearDay][id] = zone;
+    saveGearState(saved);
+    renderGear();
+  }
+
+  // Whether an item is ticked on the Gear tab, including the essentials defaults.
+  function isTicked(item, checked) {
+    if (DISABLED_ITEMS.includes(item.label)) return false;
+    if (item.checkId in checked) return !!checked[item.checkId];
+    return startsTicked(item.checkId.split("-")[0], item.group, item.label);
+  }
+
+  function renderGear() {
+    const saved = loadGear();
+    const checked = loadState();
+    const packEl = document.getElementById("zone-pack");
+    const duffleEl = document.getElementById("zone-duffle");
+    packEl.innerHTML = "";
+    duffleEl.innerHTML = "";
+    let packCount = 0;
+    let duffleCount = 0;
+
+    GEAR.forEach(item => {
+      if (isSleepKit(item)) return;
+      if (item.group === "Bags") return;
+      if (isDayKit(item)) return; // the backpack and duffle are the containers, not contents
+      if (!isTicked(item, checked)) return;
+      const zone = zoneFor(gearDay, item, saved);
+      // From day 2, flag items that moved between the day pack and the duffle since the previous day.
+      const changed = gearDay > 0 && zoneFor(gearDay - 1, item, saved) !== zone;
+      const chip = document.createElement("div");
+      chip.className = "gear-item" + (changed ? " changed" : "");
+      chip.draggable = true;
+      chip.tabIndex = 0;
+      chip.dataset.id = item.id;
+      chip.textContent = item.label;
+      chip.title = "Drag to move, or tap to switch";
+
+      chip.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text/plain", item.id);
+        e.dataTransfer.effectAllowed = "move";
+        chip.classList.add("dragging");
+      });
+      chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+      chip.addEventListener("click", () => setZone(item.id, zone === "pack" ? "duffle" : "pack"));
+      chip.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setZone(item.id, zone === "pack" ? "duffle" : "pack");
+        }
+      });
+
+      if (zone === "pack") {
+        packEl.appendChild(chip);
+        packCount++;
+      } else {
+        duffleEl.appendChild(chip);
+        duffleCount++;
+      }
+    });
+
+    document.getElementById("pack-count").textContent = packCount + " items";
+    document.getElementById("duffle-count").textContent = duffleCount + " items";
+
+    const d = DAYS[gearDay];
+    document.getElementById("day-summary").textContent =
+      d.day + " · " + d.start + " → " + d.end + " · " + d.zone + ", " + tempFor(gearDay).high + " high, " + tempFor(gearDay).low + " low";
+
+    document.querySelectorAll(".day-btn").forEach((btn, i) => {
+      btn.setAttribute("aria-pressed", i === gearDay ? "true" : "false");
+    });
+  }
+
+  function buildDayPicker() {
+    const picker = document.getElementById("day-picker");
+    DAYS.forEach((d, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "day-btn";
+      btn.textContent = d.day;
+      btn.setAttribute("aria-pressed", "false");
+      btn.addEventListener("click", () => {
+        gearDay = i;
+        renderGear();
+      });
+      picker.appendChild(btn);
+    });
+  }
+
+  document.querySelectorAll(".drop-zone").forEach(zone => {
+    zone.addEventListener("dragover", e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      zone.classList.add("over");
+    });
+    zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+    zone.addEventListener("drop", e => {
+      e.preventDefault();
+      zone.classList.remove("over");
+      const id = e.dataTransfer.getData("text/plain");
+      if (id) setZone(id, zone.dataset.zone);
+    });
+  });
+
+  document.getElementById("reset-day").addEventListener("click", () => {
+    const saved = loadGear();
+    delete saved[gearDay];
+    saveGearState(saved);
+    renderGear();
+  });
+
+  // Sleep kit: the same items every day, always in the duffle, not draggable.
+  const SLEEP_KIT_KEYS = ["Sleeping bag", "Thermal underwear", "Earplugs", "Inflatable pillow", "Fleece clothing set", "Toothpaste", "Camp slippers"];
+
+  function isSleepKit(item) {
+    // Personal hygiene goes in the sleep kit, except lip balm, which stays in the day lists.
+    if (item.group === "Personal hygiene") return item.label !== "Lip balm";
+    return SLEEP_KIT_KEYS.some(k => item.label.includes(k));
+  }
+
+  function renderSleepKit() {
+    const list = document.getElementById("sleep-list");
+    const items = GEAR.filter(isSleepKit);
+    list.innerHTML = "";
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item.label;
+      list.appendChild(li);
+    });
+    document.getElementById("sleep-count").textContent = items.length + " items";
+  }
+
+  // Day pack essentials: the same items every day, always in the day pack, not draggable.
+  const DAY_KIT_KEYS = ["Hiking socks", "Trekking pants", "Trekking shirts", "Headlamp", "Hydration bag",
+    "Water bottle", "Powerbank", "Sunscreen", "Snacks", "Athletic tape", "Dry bags"];
+
+  function isDayKit(item) {
+    if (item.label === "Lip balm") return true;
+    return DAY_KIT_KEYS.some(k => item.label.includes(k));
+  }
+
+  function renderDayKit() {
+    const list = document.getElementById("day-kit-list");
+    const items = GEAR.filter(isDayKit);
+    list.innerHTML = "";
+    items.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item.label;
+      list.appendChild(li);
+    });
+    document.getElementById("day-kit-count").textContent = items.length + " items";
+  }
+
+  renderSleepKit();
+  renderDayKit();
+  buildDayPicker();
+  renderGear();
+
+  // To do list, saved in this browser.
+  const TODO_KEY = "kilimanjaro-todo-v1";
+  let todos = [];
+
+  function loadTodos() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(TODO_KEY));
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveTodos() {
+    try {
+      localStorage.setItem(TODO_KEY, JSON.stringify(todos));
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  function renderTodos() {
+    const list = document.getElementById("todo-list");
+    list.innerHTML = "";
+
+    todos.forEach(task => {
+      const li = document.createElement("li");
+      li.className = "todo-row";
+
+      const label = document.createElement("label");
+      label.className = "item";
+
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = task.done;
+      box.addEventListener("change", () => {
+        task.done = box.checked;
+        saveTodos();
+        renderTodos();
+      });
+
+      const span = document.createElement("span");
+      span.textContent = task.text;
+
+      label.appendChild(box);
+      label.appendChild(span);
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "todo-remove";
+      remove.textContent = "Remove";
+      remove.setAttribute("aria-label", "Remove " + task.text);
+      remove.addEventListener("click", () => {
+        todos = todos.filter(t => t.id !== task.id);
+        saveTodos();
+        renderTodos();
+      });
+
+      li.appendChild(label);
+      li.appendChild(remove);
+      list.appendChild(li);
+    });
+
+    document.getElementById("todo-empty").hidden = todos.length > 0;
+    document.getElementById("todo-clear").disabled = !todos.some(t => t.done);
+  }
+
+  function addTodo() {
+    const input = document.getElementById("todo-input");
+    const text = input.value.trim();
+    if (!text) {
+      input.focus();
+      return;
+    }
+    todos.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), text, done: false });
+    saveTodos();
+    input.value = "";
+    renderTodos();
+    input.focus();
+  }
+
+  document.getElementById("todo-add-btn").addEventListener("click", addTodo);
+  document.getElementById("todo-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addTodo();
+    }
+  });
+
+  document.getElementById("todo-clear").addEventListener("click", () => {
+    todos = todos.filter(t => !t.done);
+    saveTodos();
+    renderTodos();
+  });
+
+  todos = loadTodos();
+  renderTodos();
+
+  // Save and load all progress as a JSON file.
+  const PROGRESS_APP = "kilimanjaro-packing-checklist";
+
+  function collectProgress() {
+    return {
+      app: PROGRESS_APP,
+      version: 1,
+      savedAt: new Date().toISOString(),
+      gear: loadState(),
+      dailyGear: loadGear(),
+      todos: loadTodos()
+    };
+  }
+
+  function saveProgressToFile() {
+    const data = JSON.stringify(collectProgress(), null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "kilimanjaro-progress-" + new Date().toISOString().slice(0, 10) + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function loadProgressFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      let data;
+      try {
+        data = JSON.parse(reader.result);
+      } catch (e) {
+        alert("That file isn't valid progress data.");
+        return;
+      }
+      if (!data || data.app !== PROGRESS_APP) {
+        alert("That file isn't a Kilimanjaro checklist progress file.");
+        return;
+      }
+      if (!confirm("Replace your current progress with the saved file?")) return;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.gear || {}));
+        localStorage.setItem(GEAR_KEY, JSON.stringify(data.dailyGear || {}));
+        localStorage.setItem(TODO_KEY, JSON.stringify(Array.isArray(data.todos) ? data.todos : []));
+      } catch (e) {
+        alert("Couldn't save the loaded progress in this browser.");
+        return;
+      }
+      location.reload();
+    };
+    reader.readAsText(file);
+  }
+
+  document.getElementById("save-progress").addEventListener("click", saveProgressToFile);
+  document.getElementById("load-progress").addEventListener("click", () => {
+    document.getElementById("load-file").click();
+  });
+  document.getElementById("load-file").addEventListener("change", e => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (file) loadProgressFromFile(file);
+  });
+
+  // Hourly weather for each trek day.
+  const hourlyByDay = [];
+  let weatherDay = 0;
+
+  async function fetchHourly(i) {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + ROUTE_POINT.lat +
+      "&longitude=" + ROUTE_POINT.lon +
+      "&elevation=" + PEAK_M[i] +
+      "&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m" +
+      "&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch" +
+      "&timezone=Africa%2FDar_es_Salaam" +
+      "&start_date=" + isoDate(i) + "&end_date=" + isoDate(i);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Hourly forecast request failed");
+    const h = (await response.json()).hourly;
+    return h.time.map((t, k) => ({
+      time: t.slice(11, 16),
+      temp: h.temperature_2m[k],
+      pop: h.precipitation_probability[k],
+      rain: h.precipitation[k],
+      wind: h.wind_speed_10m[k],
+      gust: h.wind_gusts_10m[k]
+    }));
+  }
+
+  function buildWeatherDayPicker() {
+    const picker = document.getElementById("weather-day-picker");
+    DAYS.forEach((d, i) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "day-btn";
+      btn.textContent = d.day;
+      btn.setAttribute("aria-pressed", "false");
+      btn.addEventListener("click", () => {
+        weatherDay = i;
+        renderWeather();
+      });
+      picker.appendChild(btn);
+    });
+  }
+
+  // Rain bands: chance in %, amount in inches per hour.
+  function rainChanceClass(pct) {
+    if (pct >= 80) return "rain-ext";
+    if (pct >= 60) return "rain-high";
+    if (pct >= 30) return "rain-mod";
+    return "";
+  }
+
+  function rainAmountClass(inches) {
+    if (inches >= 0.30) return "rain-ext";
+    if (inches >= 0.20) return "rain-high";
+    if (inches >= 0.10) return "rain-mod";
+    return "";
+  }
+
+  // Wind strength bands in mph: moderate, high, extreme.
+  function windClass(mph) {
+    if (mph >= 39) return "wind-ext";
+    if (mph >= 25) return "wind-high";
+    if (mph >= 15) return "wind-mod";
+    return "";
+  }
+
+  function renderWeather() {
+    const i = weatherDay;
+    const rows = hourlyByDay[i];
+    const summary = document.getElementById("weather-summary");
+    const body = document.getElementById("weather-body");
+    body.innerHTML = "";
+
+    document.querySelectorAll("#weather-day-picker .day-btn").forEach((btn, k) => {
+      btn.setAttribute("aria-pressed", k === i ? "true" : "false");
+    });
+
+    const feet = Math.round(PEAK_M[i] * 3.28084).toLocaleString("en-US");
+    const heading = DAYS[i].day + " · " + dateLabel(i) + " · highest point " + feet + " ft";
+
+    if (!rows) {
+      summary.textContent = heading + ". Hourly forecast unavailable.";
+      return;
+    }
+
+    const maxChance = Math.max(...rows.map(r => r.pop));
+    const totalRain = rows.reduce((sum, r) => sum + r.rain, 0);
+    const maxWind = Math.max(...rows.map(r => r.wind));
+    const maxGust = Math.max(...rows.map(r => r.gust));
+    const lowTemp = Math.round(Math.min(...rows.map(r => r.temp)));
+    const highTemp = Math.round(Math.max(...rows.map(r => r.temp)));
+    summary.textContent = heading + ". Temps " + lowTemp + " to " + highTemp + "°F. " +
+      "Rain up to " + maxChance + "% chance, about " + totalRain.toFixed(2) + " in in total. " +
+      "Wind up to " + Math.round(maxWind) + " mph, gusts to " + Math.round(maxGust) + " mph.";
+
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      const cells = [
+        [r.time, ""],
+        [Math.round(r.temp), "num"],
+        [r.pop + "%", "num " + rainChanceClass(r.pop)],
+        [r.rain.toFixed(2), "num " + rainAmountClass(r.rain)],
+        [Math.round(r.wind), "num " + windClass(r.wind)],
+        [Math.round(r.gust), "num " + windClass(r.gust)]
+      ];
+      cells.forEach(([text, cls]) => {
+        const td = document.createElement("td");
+        if (cls) td.className = cls;
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  async function loadWeather() {
+    const status = document.getElementById("weather-status");
+    status.textContent = "Loading the hourly forecast…";
+    const results = await Promise.allSettled(DAYS.map((_, i) => fetchHourly(i)));
+    let loaded = 0;
+    results.forEach((r, i) => {
+      if (r.status === "fulfilled") {
+        hourlyByDay[i] = r.value;
+        loaded++;
+      }
+    });
+    renderWeather();
+    status.textContent = loaded === DAYS.length
+      ? "Times are local to Tanzania (UTC+3)."
+      : loaded > 0
+        ? "Hourly forecast loaded for " + loaded + " of " + DAYS.length + " days."
+        : "Couldn't load the hourly forecast. Try again when you have a connection.";
+  }
+
+  buildWeatherDayPicker();
+  loadWeather();
+
+  // Show the raw progress JSON with a copy button.
+  const jsonPanel = document.getElementById("json-panel");
+  const jsonText = document.getElementById("json-text");
+  const copyStatus = document.getElementById("copy-status");
+
+  function refreshJson() {
+    jsonText.value = JSON.stringify(collectProgress(), null, 2);
+  }
+
+  function showJson() {
+    refreshJson();
+    copyStatus.textContent = "";
+    jsonPanel.hidden = false;
+    jsonPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  async function copyJson() {
+    try {
+      await navigator.clipboard.writeText(jsonText.value);
+      copyStatus.textContent = "Copied to clipboard.";
+    } catch (e) {
+      // Clipboard access is blocked here, so select the text for a manual copy.
+      jsonText.focus();
+      jsonText.select();
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch (err) { /* not supported */ }
+      copyStatus.textContent = ok
+        ? "Copied to clipboard."
+        : "Couldn't copy automatically. The text is selected, so long-press it and choose Copy.";
+    }
+  }
+
+  document.getElementById("see-json").addEventListener("click", showJson);
+  document.getElementById("refresh-json").addEventListener("click", () => {
+    refreshJson();
+    copyStatus.textContent = "Refreshed.";
+  });
+  document.getElementById("copy-json").addEventListener("click", copyJson);
+  document.getElementById("hide-json").addEventListener("click", () => {
+    jsonPanel.hidden = true;
+  });
+  jsonText.addEventListener("focus", () => jsonText.select());
+
+  // Tabs: Itinerary, Gear, Daily gear and To do
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+
+  function showTab(name, focus) {
+    tabs.forEach(tab => {
+      const selected = tab.dataset.tab === name;
+      tab.setAttribute("aria-selected", selected ? "true" : "false");
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected && focus) tab.focus();
+    });
+    document.querySelectorAll("[data-panel]").forEach(panel => {
+      panel.hidden = panel.dataset.panel !== name;
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => showTab(tab.dataset.tab, false));
+    tab.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        const next = tabs[(index + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+        showTab(next.dataset.tab, true);
+      }
+    });
+  });
+</script>
+</body>
+</html>
