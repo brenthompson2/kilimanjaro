@@ -677,6 +677,91 @@
     margin-top: 0.25rem;
   }
 
+  .group li {
+    display: flex;
+    align-items: center;
+  }
+
+  .group li .item { flex: 1; min-width: 0; }
+
+  .nb-toggle {
+    font: inherit;
+    font-size: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+  }
+
+  .nb-toggle:hover { color: var(--ink); border-color: var(--muted); }
+
+  .lock-btn {
+    font-size: 0.95rem;
+    line-height: 1;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 0.25rem 0.35rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    opacity: 0.4;
+    flex: 0 0 auto;
+  }
+
+  .lock-btn:hover,
+  .lock-btn:focus-visible {
+    opacity: 1;
+    border-color: var(--muted);
+    outline: none;
+  }
+
+  /* Pin and unpin icons are both tilted; pinned items get a slash drawn across the thumbtack. */
+  .lock-btn { position: relative; }
+
+  .lock-btn .slash {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.3em;
+    height: 2px;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .lock-btn svg {
+    display: block;
+    width: 1.1em;
+    height: 1.1em;
+    transform: rotate(45deg);
+    transition: transform 0.15s ease;
+  }
+
+  .gear-item { display: flex; align-items: center; justify-content: space-between; }
+
+  .sleep-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .gear-progress {
+    margin-bottom: 2rem;
+  }
+
+  .gear-progress .progress-meta {
+    margin-bottom: 0.5rem;
+  }
+
+  .gear-progress .btn-ghost {
+    margin-top: 0;
+  }
+
   .todo-add {
     display: flex;
     gap: 0.5rem;
@@ -773,15 +858,6 @@
       <p><strong>Tip:</strong> the <em>See progress JSON</em> button shows the same data as text, which you can copy and paste into a note.</p>
     </div>
 
-    <div class="progress">
-      <div class="progress-meta">
-        <span class="progress-count" id="count">0 / 0</span>
-        <button class="reset" id="reset" type="button">Reset all</button>
-      </div>
-      <div class="progress-bar" aria-hidden="true">
-        <div class="progress-fill" id="fill"></div>
-      </div>
-    </div>
   </div>
   <div class="wrap file-actions">
     <button class="reset" id="save-progress" type="button">Save progress to file</button>
@@ -829,6 +905,15 @@
   </section>
 
   <div id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" data-panel="gear" hidden>
+  <div class="gear-progress">
+    <div class="progress-meta">
+      <span class="progress-count" id="count">0 / 0</span>
+      <button class="btn-ghost" id="reset" type="button">Reset all</button>
+    </div>
+    <div class="progress-bar" aria-hidden="true">
+      <div class="progress-fill" id="fill"></div>
+    </div>
+  </div>
   <section class="part" id="essentials">
     <h2 class="part-title">Essential items</h2>
     <hr class="part-divider">
@@ -1062,10 +1147,16 @@
     "Tabletop games"
   ];
 
+  // Not bringing: a choice the user saved wins; otherwise the default list applies.
+  function isNotBringing(checkId, label, st) {
+    const saved = st || loadState();
+    const key = "nb-" + checkId;
+    if (key in saved) return !!saved[key];
+    return false; // everything starts enabled
+  }
+
   function startsTicked(prefix, groupTitle, label) {
-    if (DISABLED_ITEMS.includes(label)) return false;
-    if (prefix === "ess") return !ESSENTIALS_START_UNTICKED.includes(label);
-    return OPTIONAL_START_TICKED_GROUPS.includes(groupTitle) && !OPTIONAL_START_UNTICKED.includes(label);
+    return false; // everything starts unticked
   }
   const GEAR_KEY = "kilimanjaro-daily-gear-v1";
   const allBoxes = [];
@@ -1111,10 +1202,7 @@
         const box = document.createElement("input");
         box.type = "checkbox";
         box.dataset.id = id;
-        if (DISABLED_ITEMS.includes(text)) {
-          box.disabled = true;
-          label.classList.add("disabled");
-        }
+        box.dataset.label = text;
         if (startsTicked(prefix, group.title, text)) box.dataset.defaultChecked = "true";
 
         const span = document.createElement("span");
@@ -1123,6 +1211,14 @@
         label.appendChild(box);
         label.appendChild(span);
         li.appendChild(label);
+        if (prefix === "opt") {
+          const toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "nb-toggle";
+          toggle.dataset.nbFor = id;
+          toggle.textContent = "Not bringing";
+          li.appendChild(toggle);
+        }
         ul.appendChild(li);
         allBoxes.push(box);
       });
@@ -1144,11 +1240,37 @@
   render(OPTIONAL, "optional-groups", "opt");
 
   const state = loadState();
+  // Show an item as not bringing: greyed out, unticked, and the toggle label updated.
+  function setNotBringing(box, nb) {
+    box.disabled = nb;
+    if (nb) box.checked = false;
+    box.closest(".item").classList.toggle("disabled", nb);
+    const toggle = document.querySelector('[data-nb-for="' + box.dataset.id + '"]');
+    if (toggle) toggle.textContent = nb ? "I'm bringing it" : "Not bringing";
+  }
+
   allBoxes.forEach(box => {
-    box.checked = !box.disabled && (box.dataset.id in state ? !!state[box.dataset.id] : box.dataset.defaultChecked === "true");
+    const nb = isNotBringing(box.dataset.id, box.dataset.label, state);
+    setNotBringing(box, nb);
+    box.checked = !nb && (box.dataset.id in state ? !!state[box.dataset.id] : box.dataset.defaultChecked === "true");
     box.addEventListener("change", () => {
       state[box.dataset.id] = box.checked;
       saveState(state);
+      updateProgress();
+      renderGear();
+      renderSleepKit();
+    });
+  });
+
+  document.querySelectorAll(".nb-toggle").forEach(toggle => {
+    toggle.addEventListener("click", () => {
+      const id = toggle.dataset.nbFor;
+      const box = allBoxes.find(b => b.dataset.id === id);
+      const nb = !isNotBringing(id, box.dataset.label, state);
+      state["nb-" + id] = nb;
+      if (nb) state[id] = false;
+      saveState(state);
+      setNotBringing(box, nb);
       updateProgress();
       renderGear();
       renderSleepKit();
@@ -1385,9 +1507,68 @@
 
   // Whether an item is ticked on the Gear tab, including the essentials defaults.
   function isTicked(item, checked) {
-    if (DISABLED_ITEMS.includes(item.label)) return false;
+    if (isNotBringing(item.checkId, item.label)) return false;
     if (item.checkId in checked) return !!checked[item.checkId];
     return startsTicked(item.checkId.split("-")[0], item.group, item.label);
+  }
+
+  // Locks pin an item to the day pack essentials ("pack") or the duffle sleep kit ("duffle").
+  // "free" releases it back to the draggable lists. Locks apply to every day.
+  const LOCK_KEY = "kilimanjaro-locks-v1";
+
+  function loadLocks() {
+    try {
+      return JSON.parse(localStorage.getItem(LOCK_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function setLock(checkId, value) {
+    const locks = loadLocks();
+    locks[checkId] = value;
+    try {
+      localStorage.setItem(LOCK_KEY, JSON.stringify(locks));
+    } catch (e) { /* storage unavailable */ }
+    renderGear();
+    renderDayKit();
+    renderSleepKit();
+  }
+
+  // Where an item is pinned: "pack", "duffle", or null when it's draggable.
+  function lockStatus(item) {
+    const locks = loadLocks();
+    if (item.checkId in locks) {
+      const pinned = locks[item.checkId];
+      if (pinned === "free") return null;
+      return isTicked(item, loadState()) ? pinned : null;
+    }
+    // Built-in kit items only appear in a kit when they're ticked on the Gear tab.
+    if (!isTicked(item, loadState())) return null;
+    if (isDayKit(item)) return "pack";
+    if (isSleepKit(item)) return "duffle";
+    return null;
+  }
+
+  // Pin icon (SVG Repo), drawn in the current text colour.
+  const PIN_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" focusable="false"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M7.084 11.457C5.782 12.325 5 12.709 5 14.274V15h7v7l.5 1 .5-1v-7h7v-.726c0-1.565-.782-1.95-2.084-2.817l-1.147-.765L15 4l1.522-.43A2.029 2.029 0 0 0 18 1.619V1H7v.618A2.029 2.029 0 0 0 8.478 3.57L10 4l-1.77 6.692zM16.93 12l.73.485c1 .659 1.28.866 1.332 1.515H6.009c.051-.65.332-.856 1.333-1.515L8.07 12zM8.75 2.608A1.033 1.033 0 0 1 8.075 2h8.852a1.033 1.033 0 0 1-.676.608L14.862 3h-4.724zM11.035 4h2.931l1.85 7h-6.63z"></path><path fill="none" d="M0 0h24v24H0z"></path></g></svg>`;
+
+  // Unpin icon, shown on pinned items.
+  const UNPIN_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" focusable="false"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M20 14.274V15h-7v7l-.5 1-.5-1v-6.172L13.828 14h5.163c-.051-.65-.332-.856-1.333-1.515L16.93 12h-1.1l1.16-1.161.927.618c1.302.868 2.084 1.252 2.084 2.817zm2.4-10.966L3.307 22.399l-.707-.707L9.293 15H5v-.726c0-1.565.782-1.95 2.084-2.817l1.147-.765L10 4l-1.522-.43A2.029 2.029 0 0 1 7 1.619V1h11v.618a2.029 2.029 0 0 1-1.478 1.953L15 4l1.107 4.186L21.692 2.6zM10.137 3h4.724l1.388-.392A1.033 1.033 0 0 0 16.926 2H8.074a1.033 1.033 0 0 0 .676.608zm-.954 8h4.109l1.995-1.995L13.966 4h-2.931zm1.109 3l2-2H8.07l-.73.485c-1 .659-1.28.866-1.332 1.515z"></path><path fill="none" d="M0 0h24v24H0z"></path></g></svg>`;
+
+  function lockButton(title, pinned, onClick) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "lock-btn" + (pinned ? " pinned" : "");
+    btn.innerHTML = pinned ? UNPIN_SVG : PIN_SVG;
+    btn.title = title;
+    btn.setAttribute("aria-label", title);
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      onClick();
+    });
+    btn.addEventListener("keydown", e => e.stopPropagation());
+    return btn;
   }
 
   function renderGear() {
@@ -1401,9 +1582,9 @@
     let duffleCount = 0;
 
     GEAR.forEach(item => {
-      if (isSleepKit(item)) return;
+      if (lockStatus(item)) return;
       if (item.group === "Bags") return;
-      if (isDayKit(item)) return; // the backpack and duffle are the containers, not contents
+      // The backpack and duffle are the containers, not contents.
       if (!isTicked(item, checked)) return;
       const zone = zoneFor(gearDay, item, saved);
       // From day 2, flag items that moved between the day pack and the duffle since the previous day.
@@ -1414,6 +1595,7 @@
       chip.tabIndex = 0;
       chip.dataset.id = item.id;
       chip.textContent = item.label;
+      chip.appendChild(lockButton(zone === "pack" ? "Pin to day pack essentials" : "Pin to duffle sleep kit", false, () => setLock(item.checkId, zone)));
       chip.title = "Drag to move, or tap to switch";
 
       chip.addEventListener("dragstart", e => {
@@ -1424,6 +1606,7 @@
       chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
       chip.addEventListener("click", () => setZone(item.id, zone === "pack" ? "duffle" : "pack"));
       chip.addEventListener("keydown", e => {
+        if (e.target !== chip) return;
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           setZone(item.id, zone === "pack" ? "duffle" : "pack");
@@ -1445,6 +1628,9 @@
     const d = DAYS[gearDay];
     document.getElementById("day-summary").textContent =
       d.day + " · " + d.start + " → " + d.end + " · " + d.zone + ", " + tempFor(gearDay).high + " high, " + tempFor(gearDay).low + " low";
+
+    renderDayKit();
+    renderSleepKit();
 
     document.querySelectorAll(".day-btn").forEach((btn, i) => {
       btn.setAttribute("aria-pressed", i === gearDay ? "true" : "false");
@@ -1500,11 +1686,15 @@
 
   function renderSleepKit() {
     const list = document.getElementById("sleep-list");
-    const items = GEAR.filter(isSleepKit);
+    const checked = loadState();
+    const items = GEAR.filter(item => lockStatus(item) === "duffle" && !isNotBringing(item.checkId, item.label, checked));
     list.innerHTML = "";
     items.forEach(item => {
       const li = document.createElement("li");
-      li.textContent = item.label;
+      const name = document.createElement("span");
+      name.textContent = item.label;
+      li.appendChild(name);
+      li.appendChild(lockButton("Unpin", true, () => setLock(item.checkId, "free")));
       list.appendChild(li);
     });
     document.getElementById("sleep-count").textContent = items.length + " items";
@@ -1521,11 +1711,15 @@
 
   function renderDayKit() {
     const list = document.getElementById("day-kit-list");
-    const items = GEAR.filter(isDayKit);
+    const checked = loadState();
+    const items = GEAR.filter(item => lockStatus(item) === "pack" && !isNotBringing(item.checkId, item.label, checked));
     list.innerHTML = "";
     items.forEach(item => {
       const li = document.createElement("li");
-      li.textContent = item.label;
+      const name = document.createElement("span");
+      name.textContent = item.label;
+      li.appendChild(name);
+      li.appendChild(lockButton("Unpin", true, () => setLock(item.checkId, "free")));
       list.appendChild(li);
     });
     document.getElementById("day-kit-count").textContent = items.length + " items";
@@ -1642,7 +1836,8 @@
       savedAt: new Date().toISOString(),
       gear: loadState(),
       dailyGear: loadGear(),
-      todos: loadTodos()
+      todos: loadTodos(),
+      locks: loadLocks()
     };
   }
 
@@ -1678,6 +1873,7 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data.gear || {}));
         localStorage.setItem(GEAR_KEY, JSON.stringify(data.dailyGear || {}));
         localStorage.setItem(TODO_KEY, JSON.stringify(Array.isArray(data.todos) ? data.todos : []));
+        localStorage.setItem(LOCK_KEY, JSON.stringify(data.locks || {}));
       } catch (e) {
         alert("Couldn't save the loaded progress in this browser.");
         return;
