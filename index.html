@@ -8,18 +8,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* The African Theme: Chocolate Cosmos #561217, Casual Champagne #FBE5B6,
+     Nuclear #F8B735, Trendy Orange #F38218, Teal Grunge #2C6E63.
+     Darker and lighter shades of these fill the surfaces. */
   :root {
-    --header: #0b1622;
-    --snow: #111d2a;
-    --surface: #17273a;
-    --surface-2: #1f3349;
-    --navy: #e6edf3;
-    --ink: #e6edf3;
-    --muted: #9badbc;
-    --line: #2e4358;
-    --glacier: #7fb3de;
-    --accent: #f2b705;
-    --on-accent: #0b1622;
+    --header: #FBE5B6;
+    --snow: #1f0a0c;
+    --surface: #2e1215;
+    --surface-2: #3d181c;
+    --navy: #FBE5B6;
+    --ink: #FBE5B6;
+    --muted: #c9b38a;
+    --line: #5a2a2e;
+    --glacier: #6cc0ae;
+    --accent: #F8B735;
+    --on-accent: #561217;
     color-scheme: dark;
   }
 
@@ -35,7 +38,7 @@
 
   header {
     background: var(--header);
-    color: #fff;
+    color: #561217;
     padding: 2.5rem 1.25rem 2rem;
   }
 
@@ -55,7 +58,7 @@
 
   .subtitle {
     margin: 0;
-    color: #b9cad8;
+    color: #6b2a2f;
     font-size: 1.05rem;
   }
 
@@ -94,8 +97,8 @@
 
   .reset {
     background: none;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: #fff;
+    border: 1px solid rgba(251, 229, 182, 0.4);
+    color: #FBE5B6;
     font: inherit;
     font-size: 0.85rem;
     padding: 0.35rem 0.8rem;
@@ -103,7 +106,7 @@
     cursor: pointer;
   }
 
-  .reset:hover { border-color: #fff; }
+  .reset:hover { border-color: #FBE5B6; }
 
   main {
     max-width: 960px;
@@ -168,7 +171,7 @@
     border-radius: 4px;
   }
 
-  .item:hover { background: rgba(127, 179, 222, 0.12); }
+  .item:hover { background: rgba(248, 183, 53, 0.12); }
 
   .item input[type="checkbox"] {
     appearance: none;
@@ -425,7 +428,7 @@
 
   .drop-zone.over {
     border-color: var(--accent);
-    background: rgba(242, 183, 5, 0.14);
+    background: rgba(248, 183, 53, 0.16);
   }
 
   .gear-item {
@@ -595,9 +598,9 @@
     white-space: nowrap;
   }
 
-  .rain-mod { background: #bfdbfe; color: #0b1622; }
-  .rain-high { background: #60a5fa; color: #0b1622; }
-  .rain-ext { background: #1d4ed8; color: #fff; font-weight: 600; }
+  .rain-mod { background: #9ed3c7; color: #561217; }
+  .rain-high { background: #2C6E63; color: #FBE5B6; }
+  .rain-ext { background: #1d4f47; color: #FBE5B6; font-weight: 600; }
 
   .source-note,
   .wind-legend {
@@ -620,9 +623,9 @@
     font-size: 0.85rem;
   }
 
-  .wind-mod { background: #fde68a; color: #0b1622; }
-  .wind-high { background: #f6a04d; color: #0b1622; }
-  .wind-ext { background: #dc2626; color: #fff; font-weight: 600; }
+  .wind-mod { background: #F8B735; color: #561217; }
+  .wind-high { background: #F38218; color: #561217; }
+  .wind-ext { background: #561217; color: #FBE5B6; font-weight: 600; }
 
   .weather-summary {
     font-size: 0.97rem;
@@ -636,7 +639,7 @@
     border-left: 3px solid var(--accent);
     background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
-    color: #d5e0ea;
+    color: #FBE5B6;
     font-size: 0.95rem;
     line-height: 1.55;
   }
@@ -644,7 +647,7 @@
   .intro-note p { margin: 0 0 0.6rem; }
   .intro-note p:last-child { margin-bottom: 0; }
 
-  .intro-note strong { color: #fff; font-weight: 600; }
+  .intro-note strong { color: #F8B735; font-weight: 600; }
 
   .links-subhead {
     font-size: 1.2rem;
@@ -948,7 +951,7 @@
 
   .todo-remove:hover {
     color: var(--ink);
-    background: rgba(230, 237, 243, 0.08);
+    background: rgba(251, 229, 182, 0.08);
   }
 
   .todo-remove:focus-visible {
