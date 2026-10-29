@@ -768,6 +768,38 @@
     margin-top: 0;
   }
 
+  .trip-status {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .trip-status .now { font-size: 1.35rem; font-weight: 600; margin: 0 0 0.25rem; }
+  .trip-status .detail { color: var(--muted); margin: 0 0 0.5rem; font-size: 0.95rem; }
+  .trip-status .next { margin: 0 0 0.75rem; font-size: 0.97rem; }
+
+  .phase-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+    max-height: 16rem;
+    overflow-y: auto;
+    border-top: 1px solid var(--line);
+  }
+
+  .phase-list li {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .phase-list li.past { opacity: 0.5; }
+  .phase-list li.current { color: var(--ink); font-weight: 600; }
+
   .flight-group { margin-bottom: 2.25rem; }
 
   .group-title {
@@ -958,7 +990,11 @@
   </nav>
 
   <section class="part" id="panel-itinerary" role="tabpanel" aria-labelledby="tab-itinerary" data-panel="itinerary">
-    <h2 class="part-title">Day by day</h2>
+    <h2 class="part-title">Current status</h2>
+    <hr class="part-divider">
+    <div class="trip-status" id="trip-status"></div>
+
+    <h2 class="part-title">The expedition</h2>
     <hr class="part-divider">
     <p class="part-note">Altezza's 7-day Machame route. Temperatures are from the brochure. Fill in miles once you have your trail distances.</p>
     <div class="table-wrap">
@@ -982,6 +1018,23 @@
     </div>
     <p class="table-note" id="forecast-status"></p>
     <p class="table-note">Miles are from Ultimate Kilimanjaro's 7-day Machame itinerary. Temperatures for Days 2–5 and 7 are ranges across the zones you cross that day. Some camp elevations are typical figures rather than brochure values, so check them with your Altezza team.</p>
+
+    <h2 class="part-title">The Safari</h2>
+    <hr class="part-divider">
+    <p class="part-note">Shared 2-day safari. Starts in Arusha and ends at Kilimanjaro Airport. Highs and lows are from the hourly forecast for each stop.</p>
+    <div class="table-wrap">
+      <table class="days weather-table">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Location</th>
+            <th scope="col">High (°F)</th>
+            <th scope="col">Low (°F)</th>
+          </tr>
+        </thead>
+        <tbody id="safari-body"></tbody>
+      </table>
+    </div>
   </section>
 
   <div id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" data-panel="gear" hidden>
@@ -1123,10 +1176,22 @@
     <h2 class="part-title">Links</h2>
     <hr class="part-divider">
     <p class="part-note">Useful documents for the trip.</p>
+    <h3 class="links-subhead">Altezza</h3>
     <ul class="link-list">
+      <li>
+        <a href="https://altezzatravel.com/climbing-kilimanjaro/routes/machame" target="_blank" rel="noopener">Altezza 7-Day Machame route</a>
+        <span>Altezza Travel's route page.</span>
+      </li>
       <li>
         <a href="kilimanjaro-packing-list.pdf" target="_blank" rel="noopener">Altezza packing list (PDF)</a>
         <span>The full Altezza Travel brochure, with packing lists, the climate guide, and the rental shop.</span>
+      </li>
+    </ul>
+    <h3 class="links-subhead">Safari</h3>
+    <ul class="link-list">
+      <li>
+        <a href="https://lifejourneyexperience.safarioffice.app/3651223870550eb-83857ed279f/online" target="_blank" rel="noopener">Safari itinerary</a>
+        <span>Your safari booking page.</span>
       </li>
     </ul>
     <h3 class="links-subhead">AllTrails routes</h3>
@@ -2025,14 +2090,24 @@
   const hourlyByDay = [];
   let weatherDay = 0;
 
-  async function fetchHourly(i) {
-    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + ROUTE_POINT.lat +
-      "&longitude=" + ROUTE_POINT.lon +
-      "&elevation=" + PEAK_M[i] +
+  // Weather locations: the seven trek days, then the two safari stops.
+  const WEATHER_ENTRIES = [
+    ...DAYS.map((d, i) => ({
+      label: d.day, place: d.zone, dateLabel: dateLabel(i), date: isoDate(i),
+      lat: ROUTE_POINT.lat, lon: ROUTE_POINT.lon, elev: PEAK_M[i]
+    })),
+    { label: "Safari Day 1", place: "Tarangire National Park", dateLabel: "Nov 8", date: "2026-11-08", lat: -3.79, lon: 36.00, elev: 1200 },
+    { label: "Safari Day 2", place: "Ngorongoro Crater", dateLabel: "Nov 9", date: "2026-11-09", lat: -3.20, lon: 35.59, elev: 1700 }
+  ];
+
+  async function fetchHourly(e) {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + e.lat +
+      "&longitude=" + e.lon +
+      "&elevation=" + e.elev +
       "&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m,wind_gusts_10m" +
       "&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch" +
       "&timezone=Africa%2FDar_es_Salaam" +
-      "&start_date=" + isoDate(i) + "&end_date=" + isoDate(i);
+      "&start_date=" + e.date + "&end_date=" + e.date;
     const response = await fetch(url);
     if (!response.ok) throw new Error("Hourly forecast request failed");
     const h = (await response.json()).hourly;
@@ -2048,11 +2123,11 @@
 
   function buildWeatherDayPicker() {
     const picker = document.getElementById("weather-day-picker");
-    DAYS.forEach((d, i) => {
+    WEATHER_ENTRIES.forEach((e, i) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "day-btn";
-      btn.textContent = d.day;
+      btn.textContent = e.label;
       btn.setAttribute("aria-pressed", "false");
       btn.addEventListener("click", () => {
         weatherDay = i;
@@ -2096,8 +2171,9 @@
       btn.setAttribute("aria-pressed", k === i ? "true" : "false");
     });
 
-    const feet = Math.round(PEAK_M[i] * 3.28084).toLocaleString("en-US");
-    const heading = DAYS[i].day + " · " + dateLabel(i) + " · highest point " + feet + " ft";
+    const entry = WEATHER_ENTRIES[i];
+    const feet = Math.round(entry.elev * 3.28084).toLocaleString("en-US");
+    const heading = entry.label + " · " + entry.dateLabel + " · " + entry.place + " at " + feet + " ft";
 
     if (!rows) {
       summary.textContent = heading + ". Hourly forecast unavailable.";
@@ -2137,7 +2213,7 @@
   async function loadWeather() {
     const status = document.getElementById("weather-status");
     status.textContent = "Loading the hourly forecast…";
-    const results = await Promise.allSettled(DAYS.map((_, i) => fetchHourly(i)));
+    const results = await Promise.allSettled(WEATHER_ENTRIES.map(e => fetchHourly(e)));
     let loaded = 0;
     results.forEach((r, i) => {
       if (r.status === "fulfilled") {
@@ -2146,14 +2222,41 @@
       }
     });
     renderWeather();
-    status.textContent = loaded === DAYS.length
+    renderSafariTable();
+    status.textContent = loaded === WEATHER_ENTRIES.length
       ? "Times are local to Tanzania (UTC+3)."
       : loaded > 0
-        ? "Hourly forecast loaded for " + loaded + " of " + DAYS.length + " days."
+        ? "Hourly forecast loaded for " + loaded + " of " + WEATHER_ENTRIES.length + " locations."
         : "Couldn't load the hourly forecast. Try again when you have a connection.";
   }
 
+  // The Safari table: date, location, and the high and low from the hourly forecast.
+  function renderSafariTable() {
+    const body = document.getElementById("safari-body");
+    body.innerHTML = "";
+    WEATHER_ENTRIES.slice(DAYS.length).forEach((e, k) => {
+      const rows = hourlyByDay[DAYS.length + k];
+      const temps = rows ? rows.map(r => r.temp) : [];
+      const high = temps.length ? Math.round(Math.max(...temps)) + "°F" : "—";
+      const low = temps.length ? Math.round(Math.min(...temps)) + "°F" : "—";
+      const tr = document.createElement("tr");
+      [
+        [new Date(e.date + "T12:00:00+03:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }), ""],
+        [e.place === "Tarangire National Park" ? "Tarangire National Park (Fig Tree Lodge)" : e.place, ""],
+        [high, "num"],
+        [low, "num"]
+      ].forEach(([text, cls]) => {
+        const td = document.createElement("td");
+        if (cls) td.className = cls;
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
   buildWeatherDayPicker();
+  renderSafariTable();
   loadWeather();
 
   // Show the raw progress JSON with a copy button.
@@ -2353,6 +2456,96 @@
   setInterval(() => {
     if (!document.getElementById("panel-flights").hidden) renderFlights();
   }, 60000);
+
+  // Trip status: where the trip is right now, from the flight times and trek dates.
+  const TREK_DAY_STARTS = [
+    "2026-11-01T00:00:00+03:00", "2026-11-02T00:00:00+03:00", "2026-11-03T00:00:00+03:00",
+    "2026-11-04T00:00:00+03:00", "2026-11-05T00:00:00+03:00", "2026-11-06T00:00:00+03:00",
+    "2026-11-07T00:00:00+03:00", "2026-11-08T00:00:00+03:00"
+  ];
+
+  const TRIP_PHASES = [
+    { label: "Packing", end: FLIGHTS[0].depart },
+    { label: "Flying to Istanbul", start: FLIGHTS[0].depart, end: FLIGHTS[0].arrive },
+    { label: "Layover in Istanbul", start: FLIGHTS[0].arrive, end: FLIGHTS[1].depart },
+    { label: "Flying to Kilimanjaro", start: FLIGHTS[1].depart, end: FLIGHTS[1].arrive },
+    { label: "Rest day in Kilimanjaro", start: FLIGHTS[1].arrive, end: TREK_DAY_STARTS[0] },
+    ...DAYS.map((d, i) => ({
+      label: "Hiking Day " + (i + 1),
+      detail: d.start + " → " + d.end + " · " + d.miles + " mi",
+      start: TREK_DAY_STARTS[i],
+      end: TREK_DAY_STARTS[i + 1]
+    })),
+    { label: "Safari Day 1", detail: "Tarangire National Park · Fig Tree Lodge", start: TREK_DAY_STARTS[7], end: "2026-11-09T00:00:00+03:00" },
+    { label: "Safari Day 2", detail: "Ngorongoro Crater · to Kilimanjaro Airport", start: "2026-11-09T00:00:00+03:00", end: "2026-11-10T00:00:00+03:00" },
+    { label: "Rest in Tanzania", start: "2026-11-10T00:00:00+03:00", end: FLIGHTS[2].depart },
+    { label: "Flying to Istanbul", start: FLIGHTS[2].depart, end: FLIGHTS[2].arrive },
+    { label: "Layover in Istanbul", start: FLIGHTS[2].arrive, end: FLIGHTS[3].depart },
+    { label: "Flying to Seattle", start: FLIGHTS[3].depart, end: FLIGHTS[3].arrive },
+    { label: "Home", start: FLIGHTS[3].arrive }
+  ];
+
+  function phaseIndexAt(now) {
+    return TRIP_PHASES.findIndex(p =>
+      (!p.start || new Date(p.start) <= now) && (!p.end || now < new Date(p.end)));
+  }
+
+  function formatCountdown(ms) {
+    const totalMin = Math.max(0, Math.floor(ms / 60000));
+    const days = Math.floor(totalMin / 1440);
+    const hours = Math.floor((totalMin % 1440) / 60);
+    const mins = totalMin % 60;
+    return (days > 0 ? days + "d " : "") + hours + "h " + mins + "m";
+  }
+
+  function renderTripStatus() {
+    const box = document.getElementById("trip-status");
+    const now = new Date();
+    const idx = phaseIndexAt(now);
+    box.innerHTML = "";
+
+    if (idx < 0) {
+      box.textContent = "Trip status isn't available.";
+      return;
+    }
+
+    const current = TRIP_PHASES[idx];
+    const next = TRIP_PHASES[idx + 1];
+
+    const label = document.createElement("p");
+    label.className = "now";
+    label.textContent = "Now: " + current.label;
+    box.appendChild(label);
+
+    if (current.detail) {
+      const detail = document.createElement("p");
+      detail.className = "detail";
+      detail.textContent = current.detail;
+      box.appendChild(detail);
+    }
+
+    if (next) {
+      const nextLine = document.createElement("p");
+      nextLine.className = "next";
+      const countdown = next.start ? " in " + formatCountdown(new Date(next.start) - now) : "";
+      nextLine.textContent = "Next: " + next.label + (next.start ? " at " + fmtTime(next.start) : "") + countdown;
+      box.appendChild(nextLine);
+    }
+
+    const list = document.createElement("ol");
+    list.className = "phase-list";
+    TRIP_PHASES.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.textContent = p.label + (p.detail ? " · " + p.detail : "");
+      if (i < idx) li.className = "past";
+      if (i === idx) li.className = "current";
+      list.appendChild(li);
+    });
+    box.appendChild(list);
+  }
+
+  renderTripStatus();
+  setInterval(renderTripStatus, 60000);
 
   // Tabs: Itinerary, Gear, Daily gear and To do
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
