@@ -646,6 +646,12 @@
 
   .intro-note strong { color: #fff; font-weight: 600; }
 
+  .links-subhead {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 2rem 0 1rem;
+  }
+
   .link-list {
     list-style: none;
     margin: 0;
@@ -762,6 +768,91 @@
     margin-top: 0;
   }
 
+  .flight-group { margin-bottom: 2.25rem; }
+
+  .group-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+  }
+
+  .flight-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .flight-half {
+    padding: 1rem 1.1rem;
+    min-width: 0;
+  }
+
+  .flight-half + .flight-half {
+    border-left: 2px solid var(--accent);
+  }
+
+  .flight-half h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .flight-half .route {
+    margin: 0 0 0.5rem;
+    font-size: 0.97rem;
+  }
+
+  .flight-half dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.2rem 0.75rem;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .flight-half dt { color: var(--muted); }
+  .flight-half dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+  .flight-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .flight-card h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .flight-card .route { font-size: 1.05rem; margin: 0 0 0.6rem; }
+
+  .flight-card dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .flight-card dt { color: var(--muted); }
+  .flight-card dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+  .state-tools { margin-bottom: 2rem; }
+
+  .state-tools .file-actions {
+    margin-top: 1rem;
+  }
+
+  .state-tools .btn-ghost {
+    margin-top: 0;
+  }
+
   .todo-add {
     display: flex;
     gap: 0.5rem;
@@ -852,29 +943,18 @@
   <div class="wrap">
     <h1>Kilimanjaro summit adventure</h1>
     <p class="subtitle">Made for Shelby &amp; Kerrissa. Your packing list, itinerary, daily gear, weather, and to-dos for the trip.</p>
-    <div class="intro-note">
-      <p><strong>Your progress saves automatically</strong> in this browser, so it's still there when you come back.</p>
-      <p><strong>To move it to another device or keep a backup:</strong> tap <em>Save progress to file</em> to download a file. On the other device, open this page and tap <em>Load progress from file</em>, then choose that file. Keep the file somewhere safe, such as Google Drive or your Downloads folder.</p>
-      <p><strong>Tip:</strong> the <em>See progress JSON</em> button shows the same data as text, which you can copy and paste into a note.</p>
-    </div>
-
-  </div>
-  <div class="wrap file-actions">
-    <button class="reset" id="save-progress" type="button">Save progress to file</button>
-    <button class="reset" id="load-progress" type="button">Load progress from file</button>
-    <button class="reset" id="see-json" type="button">See progress JSON</button>
-    <input type="file" id="load-file" accept=".json,application/json" hidden>
   </div>
 </header>
 
 <main>
   <nav class="tabs" role="tablist" aria-label="Checklist sections">
     <button class="tab" role="tab" type="button" id="tab-itinerary" aria-controls="panel-itinerary" aria-selected="true" data-tab="itinerary">Itinerary</button>
-    <button class="tab" role="tab" type="button" id="tab-gear" aria-controls="panel-gear" aria-selected="false" data-tab="gear" tabindex="-1">Gear</button>
-    <button class="tab" role="tab" type="button" id="tab-daily" aria-controls="panel-daily" aria-selected="false" data-tab="daily" tabindex="-1">Daily gear</button>
-    <button class="tab" role="tab" type="button" id="tab-todo" aria-controls="panel-todo" aria-selected="false" data-tab="todo" tabindex="-1">To do</button>
     <button class="tab" role="tab" type="button" id="tab-weather" aria-controls="panel-weather" aria-selected="false" data-tab="weather" tabindex="-1">Weather</button>
     <button class="tab" role="tab" type="button" id="tab-links" aria-controls="panel-links" aria-selected="false" data-tab="links" tabindex="-1">Links</button>
+    <button class="tab" role="tab" type="button" id="tab-flights" aria-controls="panel-flights" aria-selected="false" data-tab="flights" tabindex="-1">Flights</button>
+    <button class="tab" role="tab" type="button" id="tab-todo" aria-controls="panel-todo" aria-selected="false" data-tab="todo" tabindex="-1">To do</button>
+    <button class="tab" role="tab" type="button" id="tab-gear" aria-controls="panel-gear" aria-selected="false" data-tab="gear" tabindex="-1">Gear</button>
+    <button class="tab" role="tab" type="button" id="tab-daily" aria-controls="panel-daily" aria-selected="false" data-tab="daily" tabindex="-1">Daily gear</button>
   </nav>
 
   <section class="part" id="panel-itinerary" role="tabpanel" aria-labelledby="tab-itinerary" data-panel="itinerary">
@@ -905,6 +985,18 @@
   </section>
 
   <div id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" data-panel="gear" hidden>
+    <div class="state-tools">
+      <div class="intro-note">
+        <p><strong>Your progress saves automatically</strong> in this browser, so it's still there when you come back.</p>
+        <p><strong>To move it to another device or keep a backup:</strong> tap <em>Save progress to file</em> to download a file. On the other device, open this page and tap <em>Load progress from file</em>, then choose that file. Keep the file somewhere safe, such as Google Drive or your Downloads folder.</p>
+        <p><strong>Tip:</strong> the <em>See progress JSON</em> button shows the same data as text, which you can copy and paste into a note.</p>
+      </div>
+      <div class="file-actions">
+        <button class="btn-ghost save-progress" type="button">Save progress to file</button>
+        <button class="btn-ghost load-progress" type="button">Load progress from file</button>
+        <button class="btn-ghost see-json" type="button">See progress JSON</button>
+      </div>
+    </div>
   <div class="gear-progress">
     <div class="progress-meta">
       <span class="progress-count" id="count">0 / 0</span>
@@ -930,6 +1022,18 @@
   </div>
 
   <div id="panel-daily" role="tabpanel" aria-labelledby="tab-daily" data-panel="daily" hidden>
+    <div class="state-tools">
+      <div class="intro-note">
+        <p><strong>Your progress saves automatically</strong> in this browser, so it's still there when you come back.</p>
+        <p><strong>To move it to another device or keep a backup:</strong> tap <em>Save progress to file</em> to download a file. On the other device, open this page and tap <em>Load progress from file</em>, then choose that file. Keep the file somewhere safe, such as Google Drive or your Downloads folder.</p>
+        <p><strong>Tip:</strong> the <em>See progress JSON</em> button shows the same data as text, which you can copy and paste into a note.</p>
+      </div>
+      <div class="file-actions">
+        <button class="btn-ghost save-progress" type="button">Save progress to file</button>
+        <button class="btn-ghost load-progress" type="button">Load progress from file</button>
+        <button class="btn-ghost see-json" type="button">See progress JSON</button>
+      </div>
+    </div>
   <section class="part">
     <h2 class="part-title">Daily gear</h2>
     <hr class="part-divider">
@@ -959,6 +1063,18 @@
   </div>
 
   <div id="panel-todo" role="tabpanel" aria-labelledby="tab-todo" data-panel="todo" hidden>
+    <div class="state-tools">
+      <div class="intro-note">
+        <p><strong>Your progress saves automatically</strong> in this browser, so it's still there when you come back.</p>
+        <p><strong>To move it to another device or keep a backup:</strong> tap <em>Save progress to file</em> to download a file. On the other device, open this page and tap <em>Load progress from file</em>, then choose that file. Keep the file somewhere safe, such as Google Drive or your Downloads folder.</p>
+        <p><strong>Tip:</strong> the <em>See progress JSON</em> button shows the same data as text, which you can copy and paste into a note.</p>
+      </div>
+      <div class="file-actions">
+        <button class="btn-ghost save-progress" type="button">Save progress to file</button>
+        <button class="btn-ghost load-progress" type="button">Load progress from file</button>
+        <button class="btn-ghost see-json" type="button">See progress JSON</button>
+      </div>
+    </div>
   <section class="part">
     <h2 class="part-title">To do</h2>
     <hr class="part-divider">
@@ -1013,6 +1129,17 @@
         <span>The full Altezza Travel brochure, with packing lists, the climate guide, and the rental shop.</span>
       </li>
     </ul>
+    <h3 class="links-subhead">AllTrails routes</h3>
+    <ul class="link-list" id="trail-links"></ul>
+  </section>
+  </div>
+
+  <div id="panel-flights" role="tabpanel" aria-labelledby="tab-flights" data-panel="flights" hidden>
+  <section class="part">
+    <h2 class="part-title">Flights</h2>
+    <hr class="part-divider">
+    <p class="part-note">Times are local to each airport.</p>
+    <div id="flight-bars"></div>
   </section>
   </div>
 
@@ -1030,6 +1157,7 @@
   </section>
 </main>
 
+<input type="file" id="load-file" accept=".json,application/json" hidden>
 <footer>Made with ❤️ by BT</footer>
 
 <script>
@@ -1883,10 +2011,10 @@
     reader.readAsText(file);
   }
 
-  document.getElementById("save-progress").addEventListener("click", saveProgressToFile);
-  document.getElementById("load-progress").addEventListener("click", () => {
+  document.querySelectorAll(".save-progress").forEach(b => b.addEventListener("click", saveProgressToFile));
+  document.querySelectorAll(".load-progress").forEach(b => b.addEventListener("click", () => {
     document.getElementById("load-file").click();
-  });
+  }));
   document.getElementById("load-file").addEventListener("change", e => {
     const file = e.target.files[0];
     e.target.value = "";
@@ -2062,7 +2190,7 @@
     }
   }
 
-  document.getElementById("see-json").addEventListener("click", showJson);
+  document.querySelectorAll(".see-json").forEach(b => b.addEventListener("click", showJson));
   document.getElementById("refresh-json").addEventListener("click", () => {
     refreshJson();
     copyStatus.textContent = "Refreshed.";
@@ -2072,6 +2200,159 @@
     jsonPanel.hidden = true;
   });
   jsonText.addEventListener("focus", () => jsonText.select());
+
+  // AllTrails routes on the Links tab, one per day that has a link.
+  const trailList = document.getElementById("trail-links");
+  TRAIL_LINKS.forEach((url, i) => {
+    if (!url) return;
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = "Day " + DAYS[i].day.replace("Day ", "") + ": " + DAYS[i].start + " to " + DAYS[i].end;
+    const note = document.createElement("span");
+    note.textContent = "AllTrails";
+    li.appendChild(a);
+    li.appendChild(note);
+    trailList.appendChild(li);
+  });
+
+  // Flights: times as confirmed. depart and arrive are ISO times with the airport's UTC offset.
+  // number is the flight number as booked; callsign is the ICAO callsign used for FlightAware.
+  const FLIGHTS = [
+    { label: "Outbound 1", number: "TK204", callsign: "THY204", from: "SEA", to: "IST", fromTz: "America/Los_Angeles", toTz: "Europe/Istanbul", depart: "2026-10-29T20:05:00-07:00", arrive: "2026-10-30T18:05:00+03:00" },
+    { label: "Outbound 2", number: "TK564", callsign: "THY564", from: "IST", to: "JRO", fromTz: "Europe/Istanbul", toTz: "Africa/Dar_es_Salaam", depart: "2026-10-30T19:35:00+03:00", arrive: "2026-10-31T02:35:00+03:00", faUrl: "https://www.flightaware.com/live/flight/THY564/history/20261030/1645Z/LTFM/HTKJ" },
+    { label: "Return 1", number: "TK562", callsign: "THY562", from: "JRO", to: "IST", fromTz: "Africa/Dar_es_Salaam", toTz: "Europe/Istanbul", depart: "2026-11-10T05:55:00+03:00", arrive: "2026-11-10T13:30:00+03:00", faUrl: "" },
+    { label: "Return 2", number: "TK203", callsign: "THY203", from: "IST", to: "SEA", fromTz: "Europe/Istanbul", toTz: "America/Los_Angeles", depart: "2026-11-11T15:35:00+03:00", arrive: "2026-11-11T18:10:00-08:00", faUrl: "" }
+  ];
+
+  let flightIndex = 0;
+
+  function fmtTime(iso, tz) {
+    if (!iso) return "Not set";
+    return new Date(iso).toLocaleString("en-US", {
+      weekday: "short", month: "short", day: "numeric",
+      hour: "numeric", minute: "2-digit",
+      timeZone: tz || undefined, timeZoneName: "short"
+    });
+  }
+
+  function untilDeparture(iso) {
+    if (!iso) return "";
+    const ms = new Date(iso) - Date.now();
+    if (ms <= 0) return "Departed";
+    const totalMin = Math.floor(ms / 60000);
+    const days = Math.floor(totalMin / 1440);
+    const hours = Math.floor((totalMin % 1440) / 60);
+    const mins = totalMin % 60;
+    return (days > 0 ? days + "d " : "") + hours + "h " + mins + "m until departure";
+  }
+
+  function flightDuration(f) {
+    if (!f.depart || !f.arrive) return "";
+    const totalMin = Math.round((new Date(f.arrive) - new Date(f.depart)) / 60000);
+    return Math.floor(totalMin / 60) + "h " + (totalMin % 60) + "m";
+  }
+
+  // Two bars, each split in half: flight 1 on the left, flight 2 on the right.
+  const FLIGHT_GROUPS = [
+    { title: "Outbound", indices: [0, 1] },
+    { title: "Return", indices: [2, 3] }
+  ];
+
+  function layoverText(a, b) {
+    const first = FLIGHTS[a];
+    const second = FLIGHTS[b];
+    if (!first.arrive || !second.depart) return "";
+    const totalMin = Math.round((new Date(second.depart) - new Date(first.arrive)) / 60000);
+    if (totalMin <= 0) return "";
+    return "Layover " + Math.floor(totalMin / 60) + "h " + (totalMin % 60) + "m in " + first.to;
+  }
+
+  function flightHalf(f) {
+    const half = document.createElement("div");
+    half.className = "flight-half";
+
+    const title = document.createElement("h3");
+    title.textContent = f.label + (f.number ? " · " + f.number : "");
+    half.appendChild(title);
+
+    const route = document.createElement("p");
+    route.className = "route";
+    route.textContent = f.from && f.to ? f.from + " → " + f.to : "Route not set";
+    half.appendChild(route);
+
+    const list = document.createElement("dl");
+    [
+      ["Departs", fmtTime(f.depart, f.fromTz)],
+      ["Arrives", fmtTime(f.arrive, f.toTz)],
+      ["Duration", flightDuration(f) || "Not set"],
+      ["Countdown", untilDeparture(f.depart) || "Set the departure time"]
+    ].forEach(([term, value]) => {
+      const dt = document.createElement("dt");
+      dt.textContent = term;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      list.appendChild(dt);
+      list.appendChild(dd);
+    });
+    half.appendChild(list);
+
+    if (f.number) {
+      const fa = document.createElement("p");
+      fa.className = "route";
+      const link = document.createElement("a");
+      link.href = f.faUrl || "https://flightaware.com/live/flight/" + encodeURIComponent(f.callsign || f.number);
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.className = "trail-link";
+      link.textContent = "FlightAware: " + (f.callsign || f.number);
+      fa.appendChild(link);
+      half.appendChild(fa);
+    }
+
+    return half;
+  }
+
+  function renderFlights() {
+    const container = document.getElementById("flight-bars");
+    container.innerHTML = "";
+
+    FLIGHT_GROUPS.forEach(group => {
+      const wrap = document.createElement("div");
+      wrap.className = "flight-group";
+
+      const heading = document.createElement("h3");
+      heading.className = "group-title";
+      heading.textContent = group.title;
+      wrap.appendChild(heading);
+
+      const bar = document.createElement("div");
+      bar.className = "flight-bar";
+      group.indices.forEach(i => bar.appendChild(flightHalf(FLIGHTS[i])));
+      wrap.appendChild(bar);
+
+      if (group.indices.length === 2) {
+        const layover = layoverText(group.indices[0], group.indices[1]);
+        if (layover) {
+          const note = document.createElement("p");
+          note.className = "table-note";
+          note.textContent = layover;
+          wrap.appendChild(note);
+        }
+      }
+
+      container.appendChild(wrap);
+    });
+  }
+
+  renderFlights();
+
+  // Keep the countdowns current while the Flights tab is open.
+  setInterval(() => {
+    if (!document.getElementById("panel-flights").hidden) renderFlights();
+  }, 60000);
 
   // Tabs: Itinerary, Gear, Daily gear and To do
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
