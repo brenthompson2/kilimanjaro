@@ -1194,6 +1194,8 @@
         <span>Your safari booking page.</span>
       </li>
     </ul>
+    <h3 class="links-subhead">Flights</h3>
+    <ul class="link-list" id="flight-links"></ul>
     <h3 class="links-subhead">AllTrails routes</h3>
     <ul class="link-list" id="trail-links"></ul>
   </section>
@@ -2451,6 +2453,23 @@
   }
 
   renderFlights();
+
+  // FlightAware links on the Links tab, one per flight with a number.
+  const flightLinks = document.getElementById("flight-links");
+  FLIGHTS.forEach(f => {
+    if (!f.number) return;
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = f.faUrl || "https://flightaware.com/live/flight/" + encodeURIComponent(f.callsign || f.number);
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = f.label + " · " + f.number + " · " + f.from + " → " + f.to;
+    const note = document.createElement("span");
+    note.textContent = "FlightAware";
+    li.appendChild(a);
+    li.appendChild(note);
+    flightLinks.appendChild(li);
+  });
 
   // Keep the countdowns current while the Flights tab is open.
   setInterval(() => {
