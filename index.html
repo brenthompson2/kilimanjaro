@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kilimanjaro summit adventure</title>
+<title>Kilimanjaro Adventure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -973,8 +973,8 @@
 
 <header>
   <div class="wrap">
-    <h1>Kilimanjaro summit adventure</h1>
-    <p class="subtitle">Made for Shelby &amp; Kerrissa. Your packing list, itinerary, daily gear, weather, and to-dos for the trip.</p>
+    <h1>Kilimanjaro Adventure</h1>
+    <p class="subtitle">Made for Shelby &amp; Kerrissa's Kilimanjaro summit expedition and Tarangire National Park safari, November 2026</p>
   </div>
 </header>
 
@@ -1028,6 +1028,8 @@
           <tr>
             <th scope="col">Date</th>
             <th scope="col">Location</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
             <th scope="col">High (°F)</th>
             <th scope="col">Low (°F)</th>
           </tr>
@@ -1185,6 +1187,21 @@
       <li>
         <a href="kilimanjaro-packing-list.pdf" target="_blank" rel="noopener">Altezza packing list (PDF)</a>
         <span>The full Altezza Travel brochure, with packing lists, the climate guide, and the rental shop.</span>
+      </li>
+    </ul>
+    <h3 class="links-subhead">Lodging</h3>
+    <ul class="link-list">
+      <li>
+        <a href="https://www.booking.com/hotel/tz/villa-arumeru-arusha1.html" target="_blank" rel="noopener">Villa Arumeru</a>
+        <span>Night of Nov 7 · booking link</span>
+      </li>
+      <li>
+        <a href="https://www.booking.com/hotel/tz/safi-house.html" target="_blank" rel="noopener">Safi House</a>
+        <span>Night of Nov 9 · booking link</span>
+      </li>
+      <li>
+        <a href="https://www.booking.com/hotel/tr/blu-ma-39-cel-istanbul.html" target="_blank" rel="noopener">Blue Marcel Hotel &amp; Suites</a>
+        <span>Istanbul · night of Nov 10 · booking link</span>
       </li>
     </ul>
     <h3 class="links-subhead">Safari</h3>
@@ -2233,6 +2250,12 @@
   }
 
   // The Safari table: date, location, and the high and low from the hourly forecast.
+  // Where each safari day starts and ends, from the booking.
+  const SAFARI_ROUTE = [
+    { start: "Arusha", end: "Fig Tree Lodge (Mto wa Mbu)" },
+    { start: "Fig Tree Lodge (Mto wa Mbu)", end: "Kilimanjaro Airport" }
+  ];
+
   function renderSafariTable() {
     const body = document.getElementById("safari-body");
     body.innerHTML = "";
@@ -2245,6 +2268,8 @@
       [
         [new Date(e.date + "T12:00:00+03:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }), ""],
         [e.place === "Tarangire National Park" ? "Tarangire National Park (Fig Tree Lodge)" : e.place, ""],
+        [SAFARI_ROUTE[k].start, ""],
+        [SAFARI_ROUTE[k].end, ""],
         [high, "num"],
         [low, "num"]
       ].forEach(([text, cls]) => {
@@ -2493,13 +2518,17 @@
       label: "Hiking Day " + (i + 1),
       detail: d.start + " → " + d.end + " · " + d.miles + " mi",
       start: TREK_DAY_STARTS[i],
-      end: TREK_DAY_STARTS[i + 1]
+      end: i === DAYS.length - 1 ? "2026-11-07T18:00:00+03:00" : TREK_DAY_STARTS[i + 1]
     })),
+    { label: "Stay at Villa Arumeru", detail: "Night of Nov 7", start: "2026-11-07T18:00:00+03:00", end: TREK_DAY_STARTS[7] },
     { label: "Safari Day 1", detail: "Tarangire National Park · Fig Tree Lodge", start: TREK_DAY_STARTS[7], end: "2026-11-09T00:00:00+03:00" },
-    { label: "Safari Day 2", detail: "Ngorongoro Crater · to Kilimanjaro Airport", start: "2026-11-09T00:00:00+03:00", end: "2026-11-10T00:00:00+03:00" },
-    { label: "Rest in Tanzania", start: "2026-11-10T00:00:00+03:00", end: FLIGHTS[2].depart },
+    { label: "Safari Day 2", detail: "Ngorongoro Crater · to Kilimanjaro Airport", start: "2026-11-09T00:00:00+03:00", end: "2026-11-09T18:00:00+03:00" },
+    { label: "Stay at Safi House", detail: "Night of Nov 9", start: "2026-11-09T18:00:00+03:00", end: "2026-11-10T02:00:00+03:00" },
+    { label: "Rest in Tanzania", start: "2026-11-10T02:00:00+03:00", end: FLIGHTS[2].depart },
     { label: "Flying to Istanbul", start: FLIGHTS[2].depart, end: FLIGHTS[2].arrive },
-    { label: "Layover in Istanbul", start: FLIGHTS[2].arrive, end: FLIGHTS[3].depart },
+    { label: "Layover in Istanbul", start: FLIGHTS[2].arrive, end: "2026-11-10T18:00:00+03:00" },
+    { label: "Stay at Blue Marcel Hotel & Suites", detail: "Night of Nov 10", start: "2026-11-10T18:00:00+03:00", end: "2026-11-11T12:00:00+03:00" },
+    { label: "Layover in Istanbul", start: "2026-11-11T12:00:00+03:00", end: FLIGHTS[3].depart },
     { label: "Flying to Seattle", start: FLIGHTS[3].depart, end: FLIGHTS[3].arrive },
     { label: "Home", start: FLIGHTS[3].arrive }
   ];
