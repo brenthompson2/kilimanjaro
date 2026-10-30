@@ -1231,7 +1231,7 @@
     <ul class="link-list">
       <li>
         <a href="https://www.booking.com/hotel/tz/aishi-machame.html" target="_blank" rel="noopener">Aishi Machame Hotel</a>
-        <span>Night of Oct 31 · Machame, Tanzania</span>
+        <span>Nights of Oct 30–31 · Machame, Tanzania</span>
       </li>
       <li>
         <a href="https://www.booking.com/hotel/tz/villa-arumeru-arusha1.html" target="_blank" rel="noopener">Villa Arumeru</a>
@@ -2549,8 +2549,9 @@
     { label: "Flying to Istanbul", start: FLIGHTS[0].depart, end: FLIGHTS[0].arrive },
     { label: "Layover in Istanbul", start: FLIGHTS[0].arrive, end: FLIGHTS[1].depart },
     { label: "Flying to Kilimanjaro", start: FLIGHTS[1].depart, end: FLIGHTS[1].arrive },
-    { label: "Rest day in Kilimanjaro", start: FLIGHTS[1].arrive, end: "2026-10-31T18:00:00+03:00" },
-    { label: "Stay at Aishi Machame Hotel", detail: "Night of Oct 31", start: "2026-10-31T18:00:00+03:00", end: TREK_DAY_STARTS[0] },
+    { label: "Night 1 at Aishi Machame Hotel", start: FLIGHTS[1].arrive, end: "2026-10-31T09:00:00+03:00" },
+    { label: "Rest day in Kilimanjaro", start: "2026-10-31T09:00:00+03:00", end: "2026-10-31T18:00:00+03:00" },
+    { label: "Night 2 at Aishi Machame Hotel", start: "2026-10-31T18:00:00+03:00", end: TREK_DAY_STARTS[0] },
     ...DAYS.map((d, i) => ({
       label: "Hiking Day " + (i + 1),
       detail: d.start + " → " + d.end + " · " + d.miles + " mi",
