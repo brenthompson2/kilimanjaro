@@ -898,6 +898,15 @@
     margin: 0 0 1.5rem;
   }
 
+  /* Same gap above each Itinerary heading; the safari heading gets extra room. */
+  #panel-itinerary .itin-heading { margin-top: 3rem; }
+  #panel-itinerary .itin-heading-wide { margin-top: 4.5rem; }
+  .route-map.climate-map { margin: 2rem 0 0; }
+
+  /* More space above the safari photo, less below it. */
+  .route-map.safari-photo { margin: 2.5rem 0 0; }
+  #panel-itinerary { margin-bottom: 1rem; }
+
   .todo-add {
     display: flex;
     gap: 0.5rem;
@@ -1003,11 +1012,11 @@
   </nav>
 
   <section class="part" id="panel-itinerary" role="tabpanel" aria-labelledby="tab-itinerary" data-panel="itinerary">
-    <h2 class="part-title">Current status</h2>
+    <h2 class="part-title itin-heading">Current status</h2>
     <hr class="part-divider">
     <div class="trip-status" id="trip-status"></div>
 
-    <h2 class="part-title">The expedition</h2>
+    <h2 class="part-title itin-heading">The expedition</h2>
     <hr class="part-divider">
     <img src="altezza-7-day-map.jpg" alt="Altezza Travel map of the 7-day Machame route, from Machame Gate to Mweka Gate" class="route-map">
     <p class="part-note">Altezza's 7-day Machame route. Temperatures are from the brochure. Fill in miles once you have your trail distances.</p>
@@ -1033,7 +1042,9 @@
     <p class="table-note" id="forecast-status"></p>
     <p class="table-note">Miles are from Ultimate Kilimanjaro's 7-day Machame itinerary. Temperatures for Days 2–5 and 7 are ranges across the zones you cross that day. Some camp elevations are typical figures rather than brochure values, so check them with your Altezza team.</p>
 
-    <h2 class="part-title">The Safari</h2>
+    <img src="kilimanjaro-climate-zones.jpg" alt="Kilimanjaro's climate zones and temperatures, from cultivation at the base to the arctic summit" class="route-map climate-map">
+
+    <h2 class="part-title itin-heading itin-heading-wide">The safari</h2>
     <hr class="part-divider">
     <img src="safari-map.jpg" alt="Map of the 2-day safari route: Arusha, Tarangire National Park, Ngorongoro Crater, and Kilimanjaro Airport" class="route-map">
     <p class="part-note">Shared 2-day safari. Starts in Arusha and ends at Kilimanjaro Airport. Highs and lows are from the hourly forecast for each stop.</p>
@@ -1052,7 +1063,7 @@
         <tbody id="safari-body"></tbody>
       </table>
     </div>
-    <img src="safari-vehicle.jpg" alt="Safari vehicle with wildebeest on the Serengeti plains" class="route-map">
+    <img src="safari-vehicle.jpg" alt="Safari vehicle with wildebeest on the Serengeti plains" class="route-map safari-photo">
   </section>
 
   <div id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" data-panel="gear" hidden>
@@ -1194,7 +1205,7 @@
     <h2 class="part-title">Links</h2>
     <hr class="part-divider">
     <p class="part-note">Useful documents for the trip.</p>
-    <h3 class="links-subhead">Altezza</h3>
+    <h3 class="links-subhead">Expedition</h3>
     <ul class="link-list">
       <li>
         <a href="https://altezzatravel.com/climbing-kilimanjaro/routes/machame" target="_blank" rel="noopener">Altezza 7-Day Machame route</a>
@@ -1205,30 +1216,34 @@
         <span>The full Altezza Travel brochure, with packing lists, the climate guide, and the rental shop.</span>
       </li>
     </ul>
-    <h3 class="links-subhead">Lodging</h3>
-    <ul class="link-list">
-      <li>
-        <a href="https://www.booking.com/hotel/tz/aishi-machame.html" target="_blank" rel="noopener">Aishi Machame Hotel</a>
-        <span>Night of Oct 31 · booking link</span>
-      </li>
-      <li>
-        <a href="https://www.booking.com/hotel/tz/villa-arumeru-arusha1.html" target="_blank" rel="noopener">Villa Arumeru</a>
-        <span>Night of Nov 7 · booking link</span>
-      </li>
-      <li>
-        <a href="https://www.booking.com/hotel/tz/safi-house.html" target="_blank" rel="noopener">Safi House</a>
-        <span>Night of Nov 9 · booking link</span>
-      </li>
-      <li>
-        <a href="https://www.booking.com/hotel/tr/blu-ma-39-cel-istanbul.html" target="_blank" rel="noopener">Blue Marcel Hotel &amp; Suites</a>
-        <span>Istanbul · night of Nov 10 · booking link</span>
-      </li>
-    </ul>
     <h3 class="links-subhead">Safari</h3>
     <ul class="link-list">
       <li>
         <a href="https://lifejourneyexperience.safarioffice.app/3651223870550eb-83857ed279f/online" target="_blank" rel="noopener">Safari itinerary</a>
-        <span>Your safari booking page.</span>
+        <span>Custom safari description</span>
+      </li>
+      <li>
+        <a href="https://lifejourneyexperience.com/tours/tarangire-ngorongoro-crater-wonders-on-a-budget/" target="_blank" rel="noopener">Life Journey Experience website</a>
+        <span>Safari company</span>
+      </li>
+    </ul>
+    <h3 class="links-subhead">Lodging</h3>
+    <ul class="link-list">
+      <li>
+        <a href="https://www.booking.com/hotel/tz/aishi-machame.html" target="_blank" rel="noopener">Aishi Machame Hotel</a>
+        <span>Night of Oct 31 · Machame, Tanzania</span>
+      </li>
+      <li>
+        <a href="https://www.booking.com/hotel/tz/villa-arumeru-arusha1.html" target="_blank" rel="noopener">Villa Arumeru</a>
+        <span>Night of Nov 7 · Arusha, Tanzania</span>
+      </li>
+      <li>
+        <a href="https://www.booking.com/hotel/tz/safi-house.html" target="_blank" rel="noopener">Safi House</a>
+        <span>Night of Nov 9 · Tanzania</span>
+      </li>
+      <li>
+        <a href="https://www.booking.com/hotel/tr/blu-ma-39-cel-istanbul.html" target="_blank" rel="noopener">Blue Marcel Hotel &amp; Suites</a>
+        <span>Night of Nov 10 · Istanbul, Turkey</span>
       </li>
     </ul>
     <h3 class="links-subhead">Flights</h3>
@@ -2421,6 +2436,7 @@
   }
 
   function flightHalf(f) {
+    const arrived = !!f.arrive && Date.now() >= new Date(f.arrive);
     const half = document.createElement("div");
     half.className = "flight-half";
 
@@ -2438,7 +2454,7 @@
       ["Departs", fmtTime(f.depart, f.fromTz)],
       ["Arrives", fmtTime(f.arrive, f.toTz)],
       ["Duration", flightDuration(f) || "Not set"],
-      ["Countdown", untilDeparture(f.depart) || "Set the departure time"]
+      ["Countdown", arrived ? "Arrived" : (untilDeparture(f.depart) || "Set the departure time")]
     ].forEach(([term, value]) => {
       const dt = document.createElement("dt");
       dt.textContent = term;
