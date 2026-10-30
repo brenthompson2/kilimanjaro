@@ -12,7 +12,7 @@
      Nuclear #F8B735, Trendy Orange #F38218, Teal Grunge #2C6E63.
      Darker and lighter shades of these fill the surfaces. */
   :root {
-    --header: #FBE5B6;
+    --header: #7A5212;
     --snow: #1f0a0c;
     --surface: #2e1215;
     --surface-2: #3d181c;
@@ -38,7 +38,7 @@
 
   header {
     background: var(--header);
-    color: #561217;
+    color: #FBE5B6;
     padding: 2.5rem 1.25rem 2rem;
   }
 
@@ -58,7 +58,7 @@
 
   .subtitle {
     margin: 0;
-    color: #6b2a2f;
+    color: #F3DDAA;
     font-size: 1.05rem;
   }
 
@@ -888,6 +888,16 @@
     margin-top: 0;
   }
 
+  .route-map {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    margin: 0 0 1.5rem;
+  }
+
   .todo-add {
     display: flex;
     gap: 0.5rem;
@@ -999,6 +1009,7 @@
 
     <h2 class="part-title">The expedition</h2>
     <hr class="part-divider">
+    <img src="altezza-7-day-map.jpg" alt="Altezza Travel map of the 7-day Machame route, from Machame Gate to Mweka Gate" class="route-map">
     <p class="part-note">Altezza's 7-day Machame route. Temperatures are from the brochure. Fill in miles once you have your trail distances.</p>
     <div class="table-wrap">
       <table class="days">
@@ -1024,6 +1035,7 @@
 
     <h2 class="part-title">The Safari</h2>
     <hr class="part-divider">
+    <img src="safari-map.jpg" alt="Map of the 2-day safari route: Arusha, Tarangire National Park, Ngorongoro Crater, and Kilimanjaro Airport" class="route-map">
     <p class="part-note">Shared 2-day safari. Starts in Arusha and ends at Kilimanjaro Airport. Highs and lows are from the hourly forecast for each stop.</p>
     <div class="table-wrap">
       <table class="days weather-table">
@@ -1040,6 +1052,7 @@
         <tbody id="safari-body"></tbody>
       </table>
     </div>
+    <img src="safari-vehicle.jpg" alt="Safari vehicle with wildebeest on the Serengeti plains" class="route-map">
   </section>
 
   <div id="panel-gear" role="tabpanel" aria-labelledby="tab-gear" data-panel="gear" hidden>
@@ -1194,6 +1207,10 @@
     </ul>
     <h3 class="links-subhead">Lodging</h3>
     <ul class="link-list">
+      <li>
+        <a href="https://www.booking.com/hotel/tz/aishi-machame.html" target="_blank" rel="noopener">Aishi Machame Hotel</a>
+        <span>Night of Oct 31 · booking link</span>
+      </li>
       <li>
         <a href="https://www.booking.com/hotel/tz/villa-arumeru-arusha1.html" target="_blank" rel="noopener">Villa Arumeru</a>
         <span>Night of Nov 7 · booking link</span>
@@ -2516,7 +2533,8 @@
     { label: "Flying to Istanbul", start: FLIGHTS[0].depart, end: FLIGHTS[0].arrive },
     { label: "Layover in Istanbul", start: FLIGHTS[0].arrive, end: FLIGHTS[1].depart },
     { label: "Flying to Kilimanjaro", start: FLIGHTS[1].depart, end: FLIGHTS[1].arrive },
-    { label: "Rest day in Kilimanjaro", start: FLIGHTS[1].arrive, end: TREK_DAY_STARTS[0] },
+    { label: "Rest day in Kilimanjaro", start: FLIGHTS[1].arrive, end: "2026-10-31T18:00:00+03:00" },
+    { label: "Stay at Aishi Machame Hotel", detail: "Night of Oct 31", start: "2026-10-31T18:00:00+03:00", end: TREK_DAY_STARTS[0] },
     ...DAYS.map((d, i) => ({
       label: "Hiking Day " + (i + 1),
       detail: d.start + " → " + d.end + " · " + d.miles + " mi",
