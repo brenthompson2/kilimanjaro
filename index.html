@@ -783,6 +783,13 @@
   .trip-status .now { font-size: 1.35rem; font-weight: 600; margin: 0 0 0.25rem; }
   .trip-status .detail { color: var(--muted); margin: 0 0 0.5rem; font-size: 0.95rem; }
   .trip-status .next { margin: 0 0 0.75rem; font-size: 0.97rem; }
+  .trip-clocks {
+    margin: 0 0 0.9rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
 
   .phase-list {
     list-style: none;
@@ -1014,6 +1021,7 @@
   <section class="part" id="panel-itinerary" role="tabpanel" aria-labelledby="tab-itinerary" data-panel="itinerary">
     <h2 class="part-title itin-heading">Current status</h2>
     <hr class="part-divider">
+    <p class="trip-clocks" id="trip-clocks"></p>
     <div class="trip-status" id="trip-status"></div>
 
     <h2 class="part-title itin-heading">The expedition</h2>
@@ -2584,6 +2592,14 @@
     return (days > 0 ? days + "d " : "") + hours + "h " + mins + "m";
   }
 
+  // The current time in a named time zone. The zone handles daylight saving, so the
+  // Eastern and Pacific times switch to EDT and PDT with the clock change.
+  function clockIn(timeZone) {
+    return new Date().toLocaleTimeString("en-US", {
+      hour: "numeric", minute: "2-digit", timeZone, timeZoneName: "short"
+    });
+  }
+
   function renderTripStatus() {
     const box = document.getElementById("trip-status");
     const now = new Date();
@@ -2602,6 +2618,11 @@
     label.className = "now";
     label.textContent = "Now: " + current.label;
     box.appendChild(label);
+
+    document.getElementById("trip-clocks").textContent =
+      "Tanzania " + clockIn("Africa/Dar_es_Salaam") +
+      " · Eastern " + clockIn("America/New_York") +
+      " · Pacific " + clockIn("America/Los_Angeles");
 
     if (current.detail) {
       const detail = document.createElement("p");
