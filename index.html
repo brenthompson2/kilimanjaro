@@ -792,6 +792,7 @@
   }
 
   .phase-list {
+    position: relative;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -2644,10 +2645,14 @@
     });
   }
 
+  let lastCentredPhase = -1;
+
   function renderTripStatus() {
     const box = document.getElementById("trip-status");
     const now = new Date();
     const idx = phaseIndexAt(now);
+    const oldList = box.querySelector(".phase-list");
+    const oldScroll = oldList ? oldList.scrollTop : null;
     box.innerHTML = "";
 
     if (idx < 0) {
@@ -2693,6 +2698,15 @@
       list.appendChild(li);
     });
     box.appendChild(list);
+
+    // Centre the current phase when it changes; otherwise keep the reader's scroll position.
+    if (idx !== lastCentredPhase) {
+      const current = list.children[idx];
+      list.scrollTop = current.offsetTop - (list.clientHeight - current.offsetHeight) / 2;
+      lastCentredPhase = idx;
+    } else if (oldScroll !== null) {
+      list.scrollTop = oldScroll;
+    }
   }
 
   renderTripStatus();
