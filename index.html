@@ -2591,17 +2591,29 @@
     { label: "Flying to Kilimanjaro", start: FLIGHTS[1].depart, end: FLIGHTS[1].arrive },
     { label: "Night 1 at Aishi Machame Hotel", start: FLIGHTS[1].arrive, end: "2026-10-31T09:00:00+03:00" },
     { label: "Rest day in Kilimanjaro", start: "2026-10-31T09:00:00+03:00", end: "2026-10-31T18:00:00+03:00" },
-    { label: "Night 2 at Aishi Machame Hotel", start: "2026-10-31T18:00:00+03:00", end: TREK_DAY_STARTS[0] },
-    ...DAYS.map((d, i) => ({
-      label: "Hiking Day " + (i + 1),
-      detail: d.start + " → " + d.end + " · " + d.miles + " mi",
-      start: TREK_DAY_STARTS[i],
-      end: i === DAYS.length - 1 ? "2026-11-07T18:00:00+03:00" : TREK_DAY_STARTS[i + 1]
-    })),
-    { label: "Stay at Villa Arumeru", detail: "Night of Nov 7", start: "2026-11-07T18:00:00+03:00", end: TREK_DAY_STARTS[7] },
-    { label: "Safari Day 1", detail: "Tarangire National Park · Fig Tree Lodge", start: TREK_DAY_STARTS[7], end: "2026-11-09T00:00:00+03:00" },
-    { label: "Safari Day 2", detail: "Ngorongoro Crater · to Kilimanjaro Airport", start: "2026-11-09T00:00:00+03:00", end: "2026-11-09T18:00:00+03:00" },
-    { label: "Stay at Safi House", detail: "Night of Nov 9", start: "2026-11-09T18:00:00+03:00", end: "2026-11-10T02:00:00+03:00" },
+    { label: "Night 2 at Aishi Machame Hotel", start: "2026-10-31T18:00:00+03:00", end: "2026-11-01T09:00:00+03:00" },
+    ...DAYS.flatMap((d, i) => {
+      const date = TREK_DAY_STARTS[i].slice(0, 10);
+      const isLast = i === DAYS.length - 1;
+      const hikeEnd = isLast ? date + "T18:00:00+03:00" : date + "T21:00:00+03:00";
+      const phases = [{
+        label: "Hiking Day " + (i + 1),
+        detail: d.start + " → " + d.end + " · " + d.miles + " mi",
+        start: date + "T09:00:00+03:00",
+        end: hikeEnd
+      }];
+      if (!isLast) {
+        // Overnight at the camp where the day ends, 9pm to 9am.
+        const nextMorning = TREK_DAY_STARTS[i + 1].slice(0, 10) + "T09:00:00+03:00";
+        phases.push({ label: "Camp " + (i + 1) + ": " + d.end, start: hikeEnd, end: nextMorning });
+      }
+      return phases;
+    }),
+    { label: "Stay at Villa Arumeru", detail: "Night of Nov 7", start: "2026-11-07T18:00:00+03:00", end: "2026-11-08T09:00:00+03:00" },
+    { label: "Safari Day 1", detail: "Tarangire National Park · Fig Tree Lodge", start: "2026-11-08T09:00:00+03:00", end: "2026-11-08T21:00:00+03:00" },
+    { label: "Safari Lodging: Fig Tree Lodge", start: "2026-11-08T21:00:00+03:00", end: "2026-11-09T09:00:00+03:00" },
+    { label: "Safari Day 2", detail: "Ngorongoro Crater · to Kilimanjaro Airport", start: "2026-11-09T09:00:00+03:00", end: "2026-11-09T21:00:00+03:00" },
+    { label: "Stay at Safi House", detail: "Night of Nov 9", start: "2026-11-09T21:00:00+03:00", end: "2026-11-10T02:00:00+03:00" },
     { label: "Rest in Tanzania", start: "2026-11-10T02:00:00+03:00", end: FLIGHTS[2].depart },
     { label: "Flying to Istanbul", start: FLIGHTS[2].depart, end: FLIGHTS[2].arrive },
     { label: "Layover in Istanbul", start: FLIGHTS[2].arrive, end: "2026-11-10T18:00:00+03:00" },
