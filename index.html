@@ -577,6 +577,13 @@
 
   .days.weather-table { min-width: 560px; }
 
+  .days.weather-table tr.past td { opacity: 0.4; }
+
+  .days.weather-table tr.now td {
+    background: rgba(248, 183, 53, 0.22);
+    font-weight: 600;
+  }
+
   .trail-btn {
     font: inherit;
     font-size: 0.82rem;
@@ -2185,6 +2192,14 @@
   const hourlyByDay = [];
   let weatherDay = 0;
 
+  // The weather entry for today in Tanzania, or the nearest one if the trip hasn't started or has ended.
+  function defaultWeatherDay() {
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Dar_es_Salaam" });
+    const exact = WEATHER_ENTRIES.findIndex(e => e.date === today);
+    if (exact >= 0) return exact;
+    return today < WEATHER_ENTRIES[0].date ? 0 : WEATHER_ENTRIES.length - 1;
+  }
+
   // Weather locations: the seven trek days, then the two safari stops.
   const WEATHER_ENTRIES = [
     ...DAYS.map((d, i) => ({
@@ -2285,8 +2300,12 @@
       "Rain up to " + maxChance + "% chance, about " + totalRain.toFixed(2) + " in in total. " +
       "Wind up to " + Math.round(maxWind) + " mph, gusts to " + Math.round(maxGust) + " mph.";
 
+    const nowMs = Date.now();
     rows.forEach(r => {
       const tr = document.createElement("tr");
+      const hourStart = new Date(entry.date + "T" + r.time + ":00+03:00").getTime();
+      if (hourStart + 3600000 <= nowMs) tr.classList.add("past");
+      else if (hourStart <= nowMs) tr.classList.add("now");
       const cells = [
         [r.time, ""],
         [Math.round(r.temp), "num"],
@@ -2358,9 +2377,15 @@
     });
   }
 
+  weatherDay = defaultWeatherDay();
   buildWeatherDayPicker();
   renderSafariTable();
   loadWeather();
+
+  // Keep the past and current hour marks up to date while the Weather tab is open.
+  setInterval(() => {
+    if (!document.getElementById("panel-weather").hidden) renderWeather();
+  }, 60000);
 
   // Show the raw progress JSON with a copy button.
   const jsonPanel = document.getElementById("json-panel");
