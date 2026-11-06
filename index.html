@@ -1034,7 +1034,7 @@
   </div>
 </header>
 
-<a class="track-banner" href="https://maps.findmespot.com/s/RV5H#history/assets" target="_blank" rel="noopener">We're on the expedition! Click here to see our current location!<span class="banner-note">GPS service is often unavailable in the rainforest as the dense tree canopies block the signal</span></a>
+<a class="track-banner" href="https://maps.findmespot.com/s/RV5H#history/assets" target="_blank" rel="noopener">Today is the summit push! Click here to see our current location!<span class="banner-note gps-note">GPS service is often unavailable in the rainforest as the dense tree canopies block the signal</span></a>
 
 <main>
   <nav class="tabs" role="tablist" aria-label="Checklist sections">
@@ -1246,7 +1246,7 @@
     <ul class="link-list">
       <li>
         <a href="https://maps.findmespot.com/s/RV5H#history/assets" target="_blank" rel="noopener">Track the expedition</a>
-        <span>Follow along with the GPS tracker carried by the guide. GPS service is often unavailable in the rainforest as the dense tree canopies block the signal.</span>
+        <span>Follow along with the GPS tracker carried by the guide.<span class="gps-note"> GPS service is often unavailable in the rainforest as the dense tree canopies block the signal.</span></span>
       </li>
       <li>
         <a href="https://altezzatravel.com/climbing-kilimanjaro/routes/machame" target="_blank" rel="noopener">Altezza 7-Day Machame route</a>
@@ -2596,17 +2596,32 @@
     ...DAYS.flatMap((d, i) => {
       const date = TREK_DAY_STARTS[i].slice(0, 10);
       const isLast = i === DAYS.length - 1;
-      const hikeEnd = isLast ? date + "T18:00:00+03:00" : date + "T21:00:00+03:00";
-      const phases = [{
-        label: "Hiking Day " + (i + 1),
-        detail: d.start + " → " + d.end + " · " + d.miles + " mi",
-        start: date + "T09:00:00+03:00",
-        end: hikeEnd
-      }];
+      const isSummitDay = i === 5;
+      const phases = [];
+
+      if (isSummitDay) {
+        // Summit push: leaves Barafu at 11pm the night before, reaching Millennium Camp by 6pm.
+        phases.push({
+          label: "Summit push",
+          detail: "Barafu Camp to Millennium Camp",
+          start: TREK_DAY_STARTS[i - 1].slice(0, 10) + "T23:00:00+03:00",
+          end: date + "T18:00:00+03:00"
+        });
+      } else {
+        phases.push({
+          label: "Hiking Day " + (i + 1),
+          detail: d.start + " → " + d.end + " · " + d.miles + " mi",
+          start: date + "T09:00:00+03:00",
+          end: isLast ? date + "T18:00:00+03:00" : date + "T21:00:00+03:00"
+        });
+      }
+
       if (!isLast) {
-        // Overnight at the camp where the day ends, 9pm to 9am.
-        const nextMorning = TREK_DAY_STARTS[i + 1].slice(0, 10) + "T09:00:00+03:00";
-        phases.push({ label: "Camp " + (i + 1) + ": " + d.end, start: hikeEnd, end: nextMorning });
+        // Overnight at the camp where the day ends. The night at Barafu ends at 11pm, when the summit push leaves.
+        const hikeEnd = isSummitDay ? date + "T18:00:00+03:00" : date + "T21:00:00+03:00";
+        const nextDate = TREK_DAY_STARTS[i + 1].slice(0, 10);
+        const end = i === 4 ? date + "T23:00:00+03:00" : nextDate + "T09:00:00+03:00";
+        phases.push({ label: "Camp " + (i + 1) + ": " + d.end, start: hikeEnd, end });
       }
       return phases;
     }),
@@ -2711,6 +2726,15 @@
 
   renderTripStatus();
   setInterval(renderTripStatus, 60000);
+
+  // The GPS note is hidden until 9am on the descent day, when the trail reaches the rainforest.
+  function updateGpsNote() {
+    const showFrom = new Date("2026-11-07T09:00:00+03:00");
+    const hidden = Date.now() < showFrom;
+    document.querySelectorAll(".gps-note").forEach(el => { el.hidden = hidden; });
+  }
+  updateGpsNote();
+  setInterval(updateGpsNote, 60000);
 
   // Tabs: Itinerary, Gear, Daily gear and To do
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
