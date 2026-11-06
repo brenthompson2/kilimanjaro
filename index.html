@@ -1041,7 +1041,7 @@
   </div>
 </header>
 
-<a class="track-banner" href="https://maps.findmespot.com/s/RV5H#history/assets" target="_blank" rel="noopener">Today is the summit push! Click here to see our current location!<span class="banner-note gps-note">GPS service is often unavailable in the rainforest as the dense tree canopies block the signal</span></a>
+<a class="track-banner" href="https://maps.findmespot.com/s/RV5H#history/assets" target="_blank" rel="noopener">We're on the expedition! Click here to see our current location!<span class="banner-note gps-note">GPS service is often unavailable in the rainforest as the dense tree canopies block the signal</span></a>
 
 <main>
   <nav class="tabs" role="tablist" aria-label="Checklist sections">
@@ -2628,14 +2628,14 @@
         // Summit push: leaves Barafu at 11pm the night before, reaching Millennium Camp by 6pm.
         phases.push({
           label: "Summit push",
-          detail: "Barafu Camp to Millennium Camp",
+          detail: "Barafu Camp to Millennium Camp · " + d.miles.replace(/\s*\(.*\)/, "") + " mi",
           start: TREK_DAY_STARTS[i - 1].slice(0, 10) + "T23:00:00+03:00",
           end: date + "T18:00:00+03:00"
         });
       } else {
         phases.push({
           label: "Hiking Day " + (i + 1),
-          detail: d.start + " → " + d.end + " · " + d.miles + " mi",
+          detail: d.start + " → " + d.end + " · " + d.miles.replace(/\s*\(.*\)/, "") + " mi",
           start: date + "T09:00:00+03:00",
           end: isLast ? date + "T18:00:00+03:00" : date + "T21:00:00+03:00"
         });
@@ -2752,14 +2752,13 @@
   renderTripStatus();
   setInterval(renderTripStatus, 60000);
 
-  // The GPS note is hidden until 9am on the descent day, when the trail reaches the rainforest.
-  function updateGpsNote() {
-    const showFrom = new Date("2026-11-07T09:00:00+03:00");
-    const hidden = Date.now() < showFrom;
-    document.querySelectorAll(".gps-note").forEach(el => { el.hidden = hidden; });
+  // The banner comes down at 9pm on the final hike day.
+  function updateBanner() {
+    const hideFrom = new Date("2026-11-07T21:00:00+03:00");
+    document.querySelector(".track-banner").hidden = Date.now() >= hideFrom;
   }
-  updateGpsNote();
-  setInterval(updateGpsNote, 60000);
+  updateBanner();
+  setInterval(updateBanner, 60000);
 
   // Tabs: Itinerary, Gear, Daily gear and To do
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
